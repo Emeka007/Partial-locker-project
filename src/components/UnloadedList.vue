@@ -1,0 +1,315 @@
+<template>
+    <div class="unloaded-list">
+      
+  
+      <!-- List of Unloaded Items -->
+      <div class="items-list">
+        <h2>Items Unloaded from Locker Machine</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Item Name</th>
+              <th>Student Name</th>
+              <th>Unload Date</th>
+              <th>Current Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in unloadedItems" :key="item.id">
+              <td>{{ item.itemName }}</td>
+              <td>{{ item.studentName }}</td>
+              <td>{{ item.unloadDate }}</td>
+              <td>{{ item.status }}</td>
+              <td>
+                <button @click="confirmReturn(item)" :disabled="item.confirmed">Confirm Return</button>
+                <select v-model="item.status" @change="updateStatus(item)">
+                  <option value="AVAILABLE">Available</option>
+                  <option value="DAMAGED">Damaged</option>
+                  <option value="SOILED">Soiled</option>
+                  <option value="DISABLED">Disabled</option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </template>
+  
+  <script>
+  export default {
+  name: 'UnloadedList',
+  data() {
+    return {
+      // Example data for unloaded items
+      unloadedItems: [
+        {
+          id: 1,
+          itemName: 'Math Textbook',
+          studentName: 'John Doe',
+          unloadDate: '2024-08-22',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 2,
+          itemName: 'Chemistry Lab Kit',
+          studentName: 'Jane Smith',
+          unloadDate: '2024-08-23',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 3,
+          itemName: 'English Literature Book',
+          studentName: 'Alice Johnson',
+          unloadDate: '2024-08-24',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 4,
+          itemName: 'Raspberry Pi 4',
+          studentName: 'Michael Brown',
+          unloadDate: '2024-08-25',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 5,
+          itemName: 'Stethoscope',
+          studentName: 'Emily White',
+          unloadDate: '2024-08-26',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 6,
+          itemName: 'Ethernet Cable Tester',
+          studentName: 'David Johnson',
+          unloadDate: '2024-08-27',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 7,
+          itemName: 'Blood Pressure Monitor',
+          studentName: 'Sarah Lee',
+          unloadDate: '2024-08-28',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 8,
+          itemName: 'Syringe Pack',
+          studentName: 'James Anderson',
+          unloadDate: '2024-08-29',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 9,
+          itemName: 'Arduino Uno Kit',
+          studentName: 'Laura Wilson',
+          unloadDate: '2024-08-30',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 10,
+          itemName: 'X-Ray Film Viewer',
+          studentName: 'Karen Taylor',
+          unloadDate: '2024-08-31',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 11,
+          itemName: 'Network Switch',
+          studentName: 'Brandon Harris',
+          unloadDate: '2024-09-01',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 12,
+          itemName: 'Nursing Simulation Manikin',
+          studentName: 'Anna Moore',
+          unloadDate: '2024-09-02',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 13,
+          itemName: 'External Hard Drive',
+          studentName: 'Peter Clark',
+          unloadDate: '2024-09-03',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 14,
+          itemName: 'Infusion Pump',
+          studentName: 'Rebecca Martinez',
+          unloadDate: '2024-09-04',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 15,
+          itemName: '3D Printer',
+          studentName: 'Christopher Rodriguez',
+          unloadDate: '2024-09-05',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 16,
+          itemName: 'Defibrillator',
+          studentName: 'Jessica Lewis',
+          unloadDate: '2024-09-06',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 17,
+          itemName: 'Wi-Fi Router',
+          studentName: 'Patricia Walker',
+          unloadDate: '2024-09-07',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 18,
+          itemName: 'Medical Scissors',
+          studentName: 'Thomas Hall',
+          unloadDate: '2024-09-08',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 19,
+          itemName: 'Server Rack Key',
+          studentName: 'Karen White',
+          unloadDate: '2024-09-09',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 20,
+          itemName: 'Pulse Oximeter',
+          studentName: 'Jason King',
+          unloadDate: '2024-09-10',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 21,
+          itemName: 'USB Flash Drive',
+          studentName: 'Nancy Wright',
+          unloadDate: '2024-09-11',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 22,
+          itemName: 'Ventilator',
+          studentName: 'George Scott',
+          unloadDate: '2024-09-12',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 23,
+          itemName: 'Virtual Reality Headset',
+          studentName: 'Ruth Adams',
+          unloadDate: '2024-09-13',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 24,
+          itemName: 'Intravenous (IV) Stand',
+          studentName: 'Kenneth Nelson',
+          unloadDate: '2024-09-14',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+        {
+          id: 25,
+          itemName: 'Projector',
+          studentName: 'Barbara Carter',
+          unloadDate: '2024-09-15',
+          status: 'AVAILABLE',
+          confirmed: false,
+        },
+      ],
+    };
+  },
+  methods: {
+    confirmReturn(item) {
+      item.confirmed = true;
+      this.updateStatus(item);
+    },
+    updateStatus(item) {
+      // Simulate updating the status in the backend or local state
+      console.log(`Status of ${item.itemName} updated to ${item.status}`);
+    },
+  },
+};
+
+  </script>
+  
+  <style scoped>
+  .unloaded-list {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h1, h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .items-list {
+    margin-bottom: 40px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border: 1px solid #ddd;
+  }
+  
+  button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 5px;
+  }
+  
+  button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+  }
+  
+  button:hover:not(:disabled) {
+    background-color: #0056b3;
+  }
+  
+  select {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  </style>
+  

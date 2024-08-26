@@ -32,11 +32,17 @@ export default {
   },
   methods: {
     login() {
-      const correctEmail = 'chukwuemeka.obanya@centria.fi';
-      const correctPassword = 'Loikju2024+';
+      // Hardcoded credentials for demonstration purposes
+      const studentEmail = 'student@centria.fi';
+      const studentPassword = 'Student2024+';
       
-      if (this.email === correctEmail && this.password === correctPassword) {
-        this.$router.push('/studentdashboard');
+      const adminEmail = 'admin@centria.fi';
+      const adminPassword = 'Admin2024+';
+      
+      if (this.email === studentEmail && this.password === studentPassword) {
+        this.$router.push('/studentdashboard'); // Redirect to student dashboard
+      } else if (this.email === adminEmail && this.password === adminPassword) {
+        this.$router.push('/admindashboard'); // Redirect to admin dashboard
       } else {
         alert('Incorrect email or password');
       }
