@@ -1,6 +1,6 @@
 <template>
     <div class="borrow-requests">
-      <h1>Borrow Requests</h1>
+      
   
       <!-- Borrow Requests List -->
       <div class="requests-list">
@@ -54,22 +54,71 @@
           {
             id: 1,
             studentName: 'John Doe',
-            itemName: 'Physics Textbook',
-            requestedDate: '2024-08-20',
+            itemName: 'Defibrillator',
+            requestedDate: '2024-06-20',
             status: 'PENDING',
           },
           {
             id: 2,
-            studentName: 'Jane Smith',
+            studentName: 'Anthony Kipkemboi',
             itemName: 'Chemistry Lab Kit',
-            requestedDate: '2024-08-22',
+            requestedDate: '2024-06-22',
             status: 'PENDING',
           },
           {
             id: 3,
             studentName: 'Alice Johnson',
-            itemName: 'Math Workbook',
+            itemName: 'Nursing Simulation Manikin',
+            requestedDate: '2024-07-10',
+            status: 'PENDING',
+          },
+          {
+            id: 4,
+            studentName: 'Angela Yogi',
+            itemName: 'Syringe Pack',
+            requestedDate: '2024-07-15',
+            status: 'PENDING',
+          },
+          {
+            id: 5,
+            studentName: 'Saurav Amatya',
+            itemName: 'Raspberry Pi',
+            requestedDate: '2024-07-25',
+            status: 'PENDING',
+          },
+          {
+            id: 6,
+            studentName: 'Ojeabulu Jude',
+            itemName: 'Stethscope',
+            requestedDate: '2024-08-05',
+            status: 'PENDING',
+          },
+          {
+            id: 7,
+            studentName: 'Majeed Babs',
+            itemName: 'Network Switcher',
+            requestedDate: '2024-08-10',
+            status: 'PENDING',
+          },
+          {
+            id: 8,
+            studentName: 'Callistus Obara',
+            itemName: 'Cable Tester',
+            requestedDate: '2024-08-20',
+            status: 'PENDING',
+          },
+          {
+            id: 9,
+            studentName: 'Joy Okonji',
+            itemName: 'SAP Workbook',
             requestedDate: '2024-08-21',
+            status: 'PENDING',
+          },
+          {
+            id: 10,
+            studentName: 'Cliff Akinde',
+            itemName: 'Financial Workbook',
+            requestedDate: '2024-08-25',
             status: 'PENDING',
           },
         ],

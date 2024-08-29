@@ -2,93 +2,135 @@
   <div class="reservations">
     <Header />
 
-    <!-- Current Reservations Section -->
-    <section>
-      <h2>Current Reservations</h2>
-      <ul v-if="currentReservations.length === 0">
-        <li class="empty-message">You have no current reservations.</li>
-      </ul>
-      <ul v-else>
-        <li v-for="reservation in currentReservations" :key="reservation.id" class="reservation-item">
-          <div>
-            <strong>Locker Number:</strong> {{ reservation.lockerNumber }}<br />
-            <strong>Item:</strong> {{ reservation.item }}<br />
-            <strong>Reservation Date:</strong> {{ reservation.reservationDate }}<br />
-            <strong>Return Deadline:</strong> {{ reservation.returnDeadline }}
-          </div>
-          <div class="barcode">
-            <svg :id="'barcode-' + reservation.lockerNumber"></svg>
-          </div>
-        </li>
-      </ul>
+    <!-- Category Section -->
+    <div class="categories">
+      <h5>Your interest</h5>
+      <div class="category-container">
+        <div class="category" v-for="category in categories" :key="category.name">
+          <span class="material-icons">{{ category.icon }}</span>
+          <span class="category-name">{{ category.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- New Section with Booked, Received, Returned -->
+    <section class="status-section">
+      <div class="status">
+        <span :class="{ highlighted: currentStatus === 'Booked' }" @click="currentStatus = 'Booked'">Booked</span>
+        <span :class="{ highlighted: currentStatus === 'Received' }" @click="navigateToReservationHistory('Received')">Received</span>
+        <span :class="{ highlighted: currentStatus === 'Returned' }" @click="navigateToReturnedItem('Returned')">Returned</span>
+      </div>
     </section>
 
-    <!-- Reservation History Section -->
-    <section>
-      <h2>Reservation History</h2>
-      <ul v-if="reservationHistory.length === 0">
-        <li class="empty-message">No reservation history available.</li>
-      </ul>
-      <ul v-else>
-        <li v-for="reservation in reservationHistory" :key="reservation.id" class="reservation-item">
-          <div>
-            <strong>Locker Number:</strong> {{ reservation.lockerNumber }}<br />
-            <strong>Item:</strong> {{ reservation.item }}<br />
-            <strong>Reservation Date:</strong> {{ reservation.reservationDate }}<br />
-            <strong>Return Date:</strong> {{ reservation.returnDate }}
-          </div>
-          <div class="barcode">
-            <svg :id="'barcode-' + reservation.lockerNumber"></svg>
-          </div>
-        </li>
-      </ul>
-    </section>
+    <!-- Top Search Section -->
+    <div class="top-search-section">
+      
+
+      <!-- Top Search Items from Data -->
+      <div 
+        class="top-search-item" 
+        v-for="item in topSearchItems" 
+        :key="item.id"
+            >
+        <img :src="require(`@/assets/${item.imageSrc}`)" :alt="item.altText" class="top-search-image" />
+        <div class="top-search-content">
+          <h3>{{ item.title }}</h3>
+          <p>From: {{ item.from }}</p>
+          <p>Note: {{ item.note }}</p>
+        </div>
+        <div class="barcode">
+          <svg :id="'barcode-topsearch-' + item.id"></svg>
+        </div>
+      </div>
+    </div>
+
+    
+
+  
   </div>
 </template>
 
 <script>
-import Header from '@/components/Header.vue'; // Import the Header component
-import JsBarcode from 'jsbarcode'; // Import JsBarcode library
+import Header from '../components/Header.vue';
+import JsBarcode from 'jsbarcode';
 
 export default {
-  components: {
-    Header, // Register the Header component
-  },
+  components: { Header },
   data() {
     return {
-      currentReservations: [
-        { id: 1, lockerNumber: '123456843', item: 'Raspberry Pi', reservationDate: '2024-06-25', returnDeadline: '2024-07-25' },
-        { id: 2, lockerNumber: '789456123', item: 'Syringe Kit', reservationDate: '2024-06-20', returnDeadline: '2024-07-20' },
+      currentStatus: 'Booked',
+      categories: [
+      { name: 'Technology', icon: 'memory' },
+      { name: 'Nursing', icon: 'medical_services' },
+      { name: 'Business', icon: 'business_center' },
+      { name: 'Engineering', icon: 'engineering' },
+      { name: 'Chemistry', icon: 'science' },
+
       ],
-      reservationHistory: [
-        { id: 3, lockerNumber: '654321789', item: 'Microscope', reservationDate: '2023-12-15', returnDate: '2024-01-10' },
-        { id: 4, lockerNumber: '987654321', item: 'Chemistry Set', reservationDate: '2023-11-30', returnDate: '2024-01-05' },
+      topSearchItems: [
+        { id:  '847362509418', imageSrc: 'Raspberry_Pi_B+_illustration.svg.png', altText: 'Raspberry Pi', title: 'Raspberry Pi', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '905731642820', imageSrc: 'Syringe-Pack.png', altText: 'Syringe Pack', title: 'Syringe Pack', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '264839750194', imageSrc: 'Defibrillator.jpg', altText: 'Defibrillator', title: 'Defibrillator', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '398275610947', imageSrc: 'chemlabkit.jpg', altText: 'Chemistry Lab Kit', title: 'Chemistry Lab Kit', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '476290351826', imageSrc: 'Cable-Tester.png', altText: 'Cable Tester', title: 'Cable Tester', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '582761403297', imageSrc: 'Nursing Simulation Manikin.png', altText: 'Nursing Simulation Manikin', title: 'Nursing Simulation Manikin', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '738154920684', imageSrc: 'Blood-Pressure-Monitor.png', altText: 'Blood Pressure Monitor', title: 'Blood Pressure Monitor', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '619204837105', imageSrc: 'Arduino-Uno-Kit.png', altText: 'Arduino Uno Kit', title: 'Arduino Uno Kit', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '294750386172', imageSrc: 'Network-Switch.png', altText: 'Network Switch', title: 'Network Switch', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '847216539780', imageSrc: 'Stethoscope.jpeg', altText: 'Stethoscope', title: 'Stethoscope', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' }
       ],
+      currentReservations: [],
+      reservationHistory: []
     };
   },
   mounted() {
     this.generateBarcodes();
   },
   methods: {
-    generateBarcodes() {
-      this.currentReservations.forEach(reservation => {
-        this.generateBarcode(reservation.lockerNumber);
+    generateBarcodes(lockerNumber) {
+      // Generate barcodes for top search items
+      this.topSearchItems.forEach(item => {
+        JsBarcode(`#barcode-topsearch-${item.id}`, item.id,lockerNumber, {
+          format: 'CODE39',
+          displayValue: false,
+          lineColor: '#0aa',
+          width: 2,
+          height: 40
+        });
       });
+      
+      // Generate barcode for each current reservation
+      this.currentReservations.forEach(reservation => {
+        JsBarcode(`#barcode-${reservation.lockerNumber}`, reservation.lockerNumber, {
+          format: 'CODE39',
+          displayValue: false,
+          width: 2,
+          height: 40
+        });
+      });
+
+      // Generate barcode for each reservation history item
       this.reservationHistory.forEach(reservation => {
-        this.generateBarcode(reservation.lockerNumber);
+        JsBarcode(`#barcode-history-${reservation.id}`, reservation.id, {
+          format: 'CODE39',
+          displayValue: false,
+          lineColor: '#0aa',
+          width: 2,
+          height: 40
+        });
       });
     },
-    generateBarcode(lockerNumber) {
-      const element = document.getElementById('barcode-' + lockerNumber);
-      if (element) {
-        JsBarcode(element, lockerNumber, {
-          format: "CODE128",
-          lineColor: "#0aa",
-          width: 2,
-          height: 50,
-          displayValue: true
-        });
-      }
+    goToBookedItem(id) {
+      // Handle click for booked items
+      this.$router.push({ name: 'BookedItem', params: { id } });
+    },
+    navigateToReservationHistory(status) {
+      // Handle click for reservation history
+      this.$router.push({ name: 'ReservationHistory', params: { status } });
+    },
+    navigateToReturnedItem(status) {
+      // Handle click for returned items
+      this.$router.push({ name: 'ReturnedItem', params: { status } });
     }
   }
 };
@@ -96,39 +138,144 @@ export default {
 
 <style scoped>
 .reservations {
-  padding: 20px;
+  font-family: Arial, sans-serif;
 }
 
-h1 {
+h2, h5 {
   font-size: 24px;
-  margin-bottom: 20px;
-}
-
-h2 {
-  font-size: 20px;
   margin-bottom: 10px;
 }
 
-.empty-message {
-  color: #666;
-  font-style: italic;
+.top-search-section, section {
+  margin-bottom: 20px;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+.category-container {
+  display: flex;
+  gap: 10px;
+}
+
+/* Category Section */
+.categories {
+  padding: 20px;
+  background-color: #f4f4f9;
+  border-radius: 8px;
+}
+
+.categories h5 {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.category-container {
+  display: flex;
+  overflow-x: auto;
+  padding: 10px 0;
+  gap: 15px;
+}
+
+.category {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  min-width: 150px;
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.category:hover {
+  background-color: #e10e49;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.category .material-icons {
+  font-size: 28px;
+  color: #e10e49;
+  margin-right: 10px;
+}
+
+.category-name {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+
+.material-icons {
+  font-size: 24px;
+  margin-right: 5px;
+}
+/* Status Section */
+.status-section {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status {
+  display: flex;
+  justify-content: space-around;
+}
+
+.status span {
+  font-size: 1rem;
+  font-weight: 500;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: color 0.3s, border-bottom 0.3s;
+  position: relative;
+}
+
+.status span.highlighted {
+  color: #0a0; /* Green color for highlighted status */
+  border-bottom: 2px solid #0a0; /* Green underline for highlighted status */
+}
+
+.status span:not(.highlighted) {
+  color: #666;
+  border-bottom: 2px solid transparent; /* No underline for non-highlighted status */
+}
+
+
+.highlighted {
+  font-weight: bold;
+}
+
+.top-search-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.top-search-image {
+  width: 100px;
+  height: auto;
+  margin-right: 10px;
+}
+
+.top-search-content {
+  flex-grow: 1;
+}
+
+.barcode svg {
+  margin-left: 10px;
+}
+
+.empty-message {
+  color: #888;
 }
 
 .reservation-item {
   display: flex;
   justify-content: space-between;
-  align-items: center;
   margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 10px;
-}
-
-.barcode svg {
-  height: 50px; /* Adjust height of barcode */
 }
 </style>
+
+

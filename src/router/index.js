@@ -5,6 +5,7 @@ import StudentNotifications from '@/components/StudentNotifications.vue';
 import StudentProfile from '../views/StudentProfile.vue'; 
 import AdminProfile from '@/components/AdminProfile.vue';
 import QuickActions from '@/components/QuickActions.vue';
+import BookedItem from '@/views/BookedItem.vue';
 import AdminDashboard from '../views/AdminDashboard.vue';
 
 const routes = [
@@ -14,6 +15,7 @@ const routes = [
   { path: '/profile', name: 'StudentProfile', component: StudentProfile },
   { path: '/adminprofile', name: 'AdminProfile', component: AdminProfile },
   { path: '/admindashboard', name: 'AdminDashboard', component: AdminDashboard },
+  { path: '/booked-item', name: 'BookedItem', component: BookedItem, props: true },
   { path: '/quickactions',    name: 'QuickActions',    component: QuickActions  },
 ];
 

@@ -79,7 +79,7 @@
         isEditing: false,
         profile: {
           name: "John Doe",
-          email: "john.doe@example.com",
+          email: "john.doe@centria.fi",
           role: "Teacher",
         },
         preferences: {

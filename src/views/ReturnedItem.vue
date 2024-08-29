@@ -1,5 +1,5 @@
 <template>
-  <div class="reservation-history">
+  <div class=" returned ">
     <Header />
 
     <!-- Category Section -->
@@ -16,9 +16,9 @@
     <!-- New Section with Booked, Received, Returned -->
     <section class="status-section">
       <div class="status">
-        <span :class="{ highlighted: currentStatus === 'Booked' }" @click="navigateToMyReservations('Booked')">Booked</span>
-        <span :class="{ highlighted: currentStatus === 'Received' }" @click="currentStatus = 'Received'">Received</span>
-        <span :class="{ highlighted: currentStatus === 'Returned' }" @click="navigateToReturnedItem('Returned')">Returned</span>
+        <span :class="{ highlighted: currentStatus === 'Booked' }" @click="navigateToMyReservations = ('Booked')">Booked</span>
+        <span :class="{ highlighted: currentStatus === 'Received' }" @click="navigateToReservationHistory('Received')">Received</span>
+        <span :class="{ highlighted: currentStatus === 'Returned' }" @click="currentStatus = 'Returned'">Returned</span>
       </div>
     </section>
 
@@ -31,10 +31,11 @@
           <p>From: Chukwuemeka Obanya</p>
           <p>Note: I’ll be letting this out ...</p>
         </div>
-        <div class="top-search-dates">
-          <div class="date-column">{{ new Date('2024-06-25').toLocaleDateString() }}</div>
-          <div class="date-column returned-date"> {{ new Date('2024-07-25').toLocaleDateString() }}</div>
+        <div class="top-search-date">
+          <div class="date-column">{{ new Date('2024-07-25').toLocaleDateString() }}</div>
+          
         </div>
+        
       </div>
       <div class="top-search-item">
         <img src="@/assets/Syringe-Pack.png" alt="Syringe Pack" class="top-search-image" />
@@ -43,9 +44,9 @@
           <p>From: Chukwuemeka Obanya</p>
           <p>Note: I’ll be letting this out ...</p>
         </div>
-        <div class="top-search-dates">
-          <div class="date-column"> {{ new Date('2024-06-20').toLocaleDateString() }}</div>
+        <div class="top-search-date">
           <div class="date-column"> {{ new Date('2024-07-20').toLocaleDateString() }}</div>
+
         </div>
       </div>
       <!-- Repeat for other items -->
@@ -56,9 +57,10 @@
           <p>From: Chukwuemeka Obanya</p>
           <p>Note: I’ll be letting this out ...</p>
         </div>
-        <div class="top-search-dates">
-          <div class="date-column"> {{ new Date('2024-06-30').toLocaleDateString() }}</div>
+        <div class="top-search-date">
           <div class="date-column"> {{ new Date('2024-07-30').toLocaleDateString() }}</div>
+
+          
         </div>
       </div>
       <div class="top-search-item">
@@ -68,15 +70,13 @@
           <p>From: Chukwuemeka Obanya</p>
           <p>Note: I’ll be letting this out ...</p>
         </div>
-        <div class="top-search-dates">
-          <div class="date-column"> {{ new Date('2024-07-01').toLocaleDateString() }}</div>
+        <div class="top-search-date">
           <div class="date-column"> {{ new Date('2024-08-01').toLocaleDateString() }}</div>
+
         </div>
       </div>
       <!-- Add more items as needed -->
     </div>
-
-    
 
     
   </div>
@@ -139,33 +139,30 @@ export default {
     function goToBookedItem(itemId) {
       router.push({ name: 'BookedItem', params: { id: itemId } });
     }
+    function navigateToMyReservations(status) {
+      // Handle click for returned items
+      router.push({ name: 'MyReservations', params: { status } });
+    }
+    function navigateToReservationHistory(status) {
+      // Handle click for reservation history
+      router.push({ name: 'ReservationHistory', params: { status } });
+    }
 
     onMounted(() => {
       generateBarcodes();
     });
 
-    function navigateToMyReservations(status) {
-      // Handle click for returned items
-      router.push({ name: 'MyReservations', params: { status } });
-    }
-
-    function navigateToReturnedItem(status) {
-      // Handle click for returned items
-      router.push({ name: 'ReturnedItem', params: { status } });
-    }
-
     return {
       categories,
+      navigateToReservationHistory,
       currentReservations,
-      navigateToMyReservations,
       reservationHistory,
       currentStatus,
       goToBookedItem,
-      navigateToReturnedItem,
+      navigateToMyReservations,
     };
   },
-};
-</script>
+};</script>
 
 <style scoped>
 .reservation-history {
@@ -245,12 +242,6 @@ ul {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.top-search-section h5 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 15px;
-}
-
 .top-search-item {
   display: flex;
   align-items: center;
@@ -273,6 +264,7 @@ ul {
 
 .top-search-content {
   flex-grow: 1;
+  margin-right: 20px; /* Add margin to the right of the content to give space for the date */
 }
 
 .top-search-content h3 {
@@ -287,27 +279,17 @@ ul {
   color: #666;
 }
 
-.top-search-dates {
+.top-search-date {
   display: flex;
-  flex-direction: row;
-  gap: 592px; 
+  flex-direction: column; /* Change to column to stack the date entries */
+  align-items: flex-start; /* Align items to the start to keep them left-aligned */
+  margin-left: 20px; /* Adjust the margin to move the dates further left */
 }
-
-
 
 .date-column {
   font-size: 1rem;
   color: #666;
-  display: flex;
-  flex-direction: column;
 }
-
-.date-column.returned-date {
-  display: flex;
-  flex-direction: row;
-  gap: 592px; 
-}
-
 
 /* Status Section */
 .status-section {
