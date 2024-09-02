@@ -8,7 +8,7 @@
         <li><router-link to="/reserved-list">Reserved List</router-link></li>
         <li><router-link to="/returned-list">Returned List</router-link></li>
         <li><router-link to="/unloaded-list">Unloaded List</router-link></li>
-        <li><router-link to="/adminprofile">Profile</router-link></li> <!-- Corrected path -->
+        <li><router-link to="/adminprofile">Profile</router-link></li> 
         <li><router-link to="/">Logout</router-link></li>
       </ul>
     </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="returned-items-page">
+  <div class="pending-items-page">
     <!-- Quick Links Section -->
     <div class="quick-links">
       <ul>
@@ -16,48 +16,48 @@
 
     <div class="content-section">
       <!-- Summary Cards Section -->
-      <div class="summary-section">
+<div class="summary-section">
         <div class="summary-cards">
-          <div class="card" :class="{ highlighted: activeCard === 'loaded' }" @click="handleCardClick('loaded')">
+          <div class="card " @click="handleCardClick('loaded')">
             <h3>Loaded Items</h3>
           </div>
-          <div class="card" :class="{ highlighted: activeCard === 'scheduled' }" @click="handleCardClick('scheduled')">
+          <div class="card" @click="handleCardClick('scheduled')">
             <h3>Scheduled Items</h3>
           </div>
-          <div class="card" :class="{ highlighted: activeCard === 'pending' }" @click="handleCardClick('pending')">
+          <div class="card highlighted " @click="handleCardClick('pending')">
             <h3>Pending Items</h3>
           </div>
-          <div class="card" :class="{ highlighted: activeCard === 'returned' }" @click="handleCardClick('returned')">
+          <div class="card" @click="handleCardClick('returned')">
             <h3>Returned Items</h3>
           </div>
-          <div class="card" :class="{ highlighted: activeCard === 'reserved' }" @click="handleCardClick('reserved')">
+          <div class="card" @click="handleCardClick('reserved')">
             <h3>Reserved Items</h3>
           </div>
-         
-        </div>
+          </div>
       </div>
 
-      <!-- Items Table Section for Returned Items -->
-      <div v-if="activeCard === 'returned'" class="items-table-section">
+      <!-- Items Table Section for Pending Items -->
+      <div v-if="activeCard === 'pending'" class="items-table-section">
         <table class="items-table">
           <thead>
             <tr>
-              <th>Item Name</th>
               <th>Student Name</th>
-              <th>Return Date</th>
-              <th>Item Status</th>
+              <th>Item Name</th>
+              <th>Category</th>
+              <th>Requested Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="request in filteredRequests" :key="request.id">
-              <td>{{ request.itemName }}</td>
               <td>{{ request.studentName }}</td>
-              <td>{{ request.returnDate }}</td>
-              <td>{{ request.itemStatus }}</td>
+              <td>{{ request.itemName }}</td>
+              <td>{{ request.category }}</td>
+              <td>{{ request.requestedDate }}</td>
               <td>
-                <button @click="retrieveItem(request.id)">Retrieve</button>
-                <button @click="uploadItem(request.id)">Upload</button>
+                <button @click="approveRequest(request.id)">Approve</button>
+                <button @click="rejectRequest(request.id)">Reject</button>
+                <button @click="viewRequestDetails(request.id)">View Details</button>
               </td>
             </tr>
           </tbody>
@@ -70,8 +70,9 @@
           <h2>Request Details</h2>
           <p><strong>Student Name:</strong> {{ selectedRequest.studentName }}</p>
           <p><strong>Item Name:</strong> {{ selectedRequest.itemName }}</p>
-          <p><strong>Return Date:</strong> {{ selectedRequest.returnDate }}</p>
-          <p><strong>Item Status:</strong> {{ selectedRequest.itemStatus }}</p>
+          <p><strong>Category Name:</strong> {{ selectedRequest.categoryName }}</p>
+          <p><strong>Requested Date:</strong> {{ selectedRequest.requestedDate }}</p>
+          <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
           <button @click="closeDetailsModal" class="close-button">Close</button>
         </div>
       </div>
@@ -81,43 +82,45 @@
 
 <script>
 export default {
-  name: 'ReturnedList',
+  name: 'PendingItems',
   data() {
     return {
-      activeCard: 'returned', // Default active card
+      activeCard: 'pending', // Default active card
       selectedRequest: null,
       items: [
-        { id: 1, studentName: 'John Doe', itemName: 'Defibrillator', returnDate: '2024-08-20', itemStatus: 'Good Condition' },
-        { id: 2, studentName: 'Anthony Kipkemboi', itemName: 'Chemistry Lab Kit', returnDate: '2024-08-22', itemStatus: 'Damaged' },
-        { id: 3, studentName: 'Alice Johnson', itemName: 'Nursing Simulation Manikin', returnDate: '2024-08-23', itemStatus: 'Broken' },
-        { id: 4, studentName: 'Angela Yogi', itemName: 'Syringe Pack', returnDate: '2024-08-25', itemStatus: 'Good Condition' },
-        { id: 5, studentName: 'Saurav Amatya', itemName: 'Raspberry Pi', returnDate: '2024-08-27', itemStatus: 'Good Condition' },
-        { id: 6, studentName: 'Ojeabulu Jude', itemName: 'Stethoscope', returnDate: '2024-08-28', itemStatus: 'Good Condition' },
-        { id: 7, studentName: 'Majeed Babs', itemName: 'Network Switcher', returnDate: '2024-08-29', itemStatus: 'Damaged' },
-        { id: 8, studentName: 'Callistus Obara', itemName: 'Cable Tester', returnDate: '2024-08-30', itemStatus: 'Good Condition' },
-        { id: 9, studentName: 'Joy Okonji', itemName: 'SAP Workbook', returnDate: '2024-08-31', itemStatus: 'Good Condition' },
-        { id: 10, studentName: 'Cliff Akinde', itemName: 'Financial Workbook', returnDate: '2024-09-01', itemStatus: 'Soiled' },
+        { id: 1, studentName: 'John Doe', itemName: 'Defibrillator', category: 'Medical', requestedDate: '2024-06-20', status: 'PENDING' },
+        { id: 2, studentName: 'Anthony Kipkemboi', itemName: 'Chemistry Lab Kit', category: 'Lab Equipment', requestedDate: '2024-06-22', status: 'PENDING' },
+        { id: 3, studentName: 'Alice Johnson', itemName: 'Nursing Simulation Manikin', category: 'Medical', requestedDate: '2024-07-10', status: 'PENDING' },
+        { id: 4, studentName: 'Angela Yogi', itemName: 'Syringe Pack', category: 'Medical', requestedDate: '2024-07-15', status: 'PENDING' },
+        { id: 5, studentName: 'Saurav Amatya', itemName: 'Raspberry Pi', category: 'Electronics', requestedDate: '2024-07-25', status: 'PENDING' },
+        { id: 6, studentName: 'Ojeabulu Jude', itemName: 'Stethoscope', category: 'Medical', requestedDate: '2024-08-05', status: 'PENDING' },
+        { id: 7, studentName: 'Majeed Babs', itemName: 'Network Switcher', category: 'Electronics', requestedDate: '2024-08-10', status: 'PENDING' },
+        { id: 8, studentName: 'Callistus Obara', itemName: 'Cable Tester', category: 'Electronics', requestedDate: '2024-08-20', status: 'PENDING' },
+        { id: 9, studentName: 'Joy Okonji', itemName: 'SAP Workbook', category: 'Educational', requestedDate: '2024-08-21', status: 'PENDING' },
+        { id: 10, studentName: 'Cliff Akinde', itemName: 'Financial Workbook', category: 'Educational', requestedDate: '2024-08-25', status: 'PENDING' },
       ],
     };
   },
   computed: {
     filteredRequests() {
-      return this.items; // Showing all returned items
+      return this.items.filter((item) => item.status === 'PENDING');
     },
   },
   methods: {
-    retrieveItem(requestId) {
+    approveRequest(requestId) {
       const request = this.items.find((req) => req.id === requestId);
       if (request) {
-        alert(`Item ${request.itemName} by ${request.studentName} has been retrieved.`);
-        this.notifyStudent(request, 'retrieved');
+        request.status = 'APPROVED';
+        alert(`Request for ${request.itemName} by ${request.studentName} has been approved.`);
+        this.notifyStudent(request, 'approved');
       }
     },
-    uploadItem(requestId) {
+    rejectRequest(requestId) {
       const request = this.items.find((req) => req.id === requestId);
       if (request) {
-        alert(`Item ${request.itemName} by ${request.studentName} has been uploaded to the inventory.`);
-        this.notifyStudent(request, 'uploaded');
+        request.status = 'REJECTED';
+        alert(`Request for ${request.itemName} by ${request.studentName} has been rejected.`);
+        this.notifyStudent(request, 'rejected');
       }
     },
     viewRequestDetails(requestId) {
@@ -127,7 +130,7 @@ export default {
       this.selectedRequest = null;
     },
     notifyStudent(request, decision) {
-      console.log(`Student ${request.studentName} has been notified that their item ${request.itemName} was ${decision}.`);
+      console.log(`Student ${request.studentName} has been notified that their request for ${request.itemName} was ${decision}.`);
     },
     handleCardClick(cardType) {
       this.activeCard = cardType;
@@ -137,7 +140,7 @@ export default {
 </script>
 
 <style scoped>
-.returned-items-page {
+.pending-items-page {
   display: flex;
   font-family: Arial, sans-serif;
 }
@@ -277,7 +280,6 @@ p {
 .add-new-button:hover {
   background-color: #76e072;
 }
-
 /* Styles for Action Buttons */
 button {
   padding: 8px 16px;
@@ -301,7 +303,7 @@ button:last-child {
   margin-right: 0; /* Remove margin for the last button in a row */
 }
 
-/* Retrieve Button */
+/* Approve Button */
 button:nth-child(1) {
   background-color: #28a745;
   color: white;
@@ -311,14 +313,26 @@ button:nth-child(1):hover {
   background-color: #218838;
 }
 
-/* Upload Button */
+/* Reject Button */
 button:nth-child(2) {
-  background-color: #007bff;
+  background-color: #dc3545;
   color: white;
 }
 
 button:nth-child(2):hover {
+  background-color: #c82333;
+}
+
+/* View Details Button */
+button:nth-child(3) {
+  background-color: #007bff;
+  color: white;
+}
+
+button:nth-child(3):hover {
   background-color: #0056b3;
 }
 
 </style>
+
+

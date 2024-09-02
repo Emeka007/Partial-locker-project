@@ -7,6 +7,9 @@ import AdminProfile from '@/components/AdminProfile.vue';
 import QuickActions from '@/components/QuickActions.vue';
 import BookedItem from '@/views/BookedItem.vue';
 import AdminDashboard from '../views/AdminDashboard.vue';
+import UploadItem from '@/components/UploadItem.vue';
+import UploadPop from '@/components/UploadPop.vue';
+import ScheduledItems from '@/components/ScheduledItems.vue';
 
 const routes = [
   { path: '/', name: 'StudentLogin', component: StudentLogin },
@@ -17,6 +20,14 @@ const routes = [
   { path: '/admindashboard', name: 'AdminDashboard', component: AdminDashboard },
   { path: '/booked-item', name: 'BookedItem', component: BookedItem, props: true },
   { path: '/quickactions',    name: 'QuickActions',    component: QuickActions  },
+  { path: '/upload-item',    name: 'UploadItem',    component: UploadItem,  },
+  { path: '/upload-pop',    name: 'UploadPop',    component: UploadPop,  },
+  { path: '/scheduled-items',    name: 'ScheduledItems',    component: ScheduledItems,  },
+  {
+    path: '/returned-list',
+    name: 'ReturnedList',
+    component: () => import('@/components/ReturnedList.vue')
+  },
 ];
 
 const router = createRouter({

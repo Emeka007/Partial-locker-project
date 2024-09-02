@@ -1,5 +1,5 @@
 <template>
-  <div class="returned-items-page">
+  <div class="reserved-items-page">
     <!-- Quick Links Section -->
     <div class="quick-links">
       <ul>
@@ -15,6 +15,13 @@
     </div>
 
     <div class="content-section">
+      <!-- Header Section with Search Bar and Profile Image -->
+      <div class="header-section">
+        <input type="text" class="search-bar" placeholder="Search..." v-model="searchQuery" @input="filterItems" />
+        <img :src="require('@/assets/admin.png')" alt="Admin" class="admin-image">
+
+      </div>
+
       <!-- Summary Cards Section -->
       <div class="summary-section">
         <div class="summary-cards">
@@ -33,31 +40,29 @@
           <div class="card" :class="{ highlighted: activeCard === 'reserved' }" @click="handleCardClick('reserved')">
             <h3>Reserved Items</h3>
           </div>
-         
         </div>
       </div>
 
-      <!-- Items Table Section for Returned Items -->
-      <div v-if="activeCard === 'returned'" class="items-table-section">
+      <!-- Items Table Section for Reserved Items -->
+      <div v-if="activeCard === 'reserved'" class="items-table-section">
         <table class="items-table">
           <thead>
             <tr>
-              <th>Item Name</th>
               <th>Student Name</th>
-              <th>Return Date</th>
-              <th>Item Status</th>
+              <th>Item Name</th>
+              <th>Category</th>
+              <th>Reserved Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="request in filteredRequests" :key="request.id">
-              <td>{{ request.itemName }}</td>
               <td>{{ request.studentName }}</td>
-              <td>{{ request.returnDate }}</td>
-              <td>{{ request.itemStatus }}</td>
+              <td>{{ request.itemName }}</td>
+              <td>{{ request.category }}</td>
+              <td>{{ request.reservedDate }}</td>
               <td>
-                <button @click="retrieveItem(request.id)">Retrieve</button>
-                <button @click="uploadItem(request.id)">Upload</button>
+                <button @click="cancelReservation(request.id)">Cancel</button>
               </td>
             </tr>
           </tbody>
@@ -67,11 +72,12 @@
       <!-- Student and Item Details Modal -->
       <div v-if="selectedRequest" class="details-modal">
         <div class="modal-content">
-          <h2>Request Details</h2>
+          <h2>Reservation Details</h2>
           <p><strong>Student Name:</strong> {{ selectedRequest.studentName }}</p>
           <p><strong>Item Name:</strong> {{ selectedRequest.itemName }}</p>
-          <p><strong>Return Date:</strong> {{ selectedRequest.returnDate }}</p>
-          <p><strong>Item Status:</strong> {{ selectedRequest.itemStatus }}</p>
+          <p><strong>Category Name:</strong> {{ selectedRequest.categoryName }}</p>
+          <p><strong>Reserved Date:</strong> {{ selectedRequest.reservedDate }}</p>
+          <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
           <button @click="closeDetailsModal" class="close-button">Close</button>
         </div>
       </div>
@@ -81,43 +87,43 @@
 
 <script>
 export default {
-  name: 'ReturnedList',
+  name: 'ReservedItems',
   data() {
     return {
-      activeCard: 'returned', // Default active card
+      activeCard: 'reserved', // Default active card
       selectedRequest: null,
+      searchQuery: '', // Added search query data binding
       items: [
-        { id: 1, studentName: 'John Doe', itemName: 'Defibrillator', returnDate: '2024-08-20', itemStatus: 'Good Condition' },
-        { id: 2, studentName: 'Anthony Kipkemboi', itemName: 'Chemistry Lab Kit', returnDate: '2024-08-22', itemStatus: 'Damaged' },
-        { id: 3, studentName: 'Alice Johnson', itemName: 'Nursing Simulation Manikin', returnDate: '2024-08-23', itemStatus: 'Broken' },
-        { id: 4, studentName: 'Angela Yogi', itemName: 'Syringe Pack', returnDate: '2024-08-25', itemStatus: 'Good Condition' },
-        { id: 5, studentName: 'Saurav Amatya', itemName: 'Raspberry Pi', returnDate: '2024-08-27', itemStatus: 'Good Condition' },
-        { id: 6, studentName: 'Ojeabulu Jude', itemName: 'Stethoscope', returnDate: '2024-08-28', itemStatus: 'Good Condition' },
-        { id: 7, studentName: 'Majeed Babs', itemName: 'Network Switcher', returnDate: '2024-08-29', itemStatus: 'Damaged' },
-        { id: 8, studentName: 'Callistus Obara', itemName: 'Cable Tester', returnDate: '2024-08-30', itemStatus: 'Good Condition' },
-        { id: 9, studentName: 'Joy Okonji', itemName: 'SAP Workbook', returnDate: '2024-08-31', itemStatus: 'Good Condition' },
-        { id: 10, studentName: 'Cliff Akinde', itemName: 'Financial Workbook', returnDate: '2024-09-01', itemStatus: 'Soiled' },
+        { id: 1, studentName: 'John Doe', itemName: 'Defibrillator', category: 'Medical', reservedDate: '2024-06-20', status: 'RESERVED' },
+        { id: 2, studentName: 'Anthony Kipkemboi', itemName: 'Chemistry Lab Kit', category: 'Lab Equipment', reservedDate: '2024-06-22', status: 'RESERVED' },
+        { id: 3, studentName: 'Alice Johnson', itemName: 'Nursing Simulation Manikin', category: 'Medical', reservedDate: '2024-07-10', status: 'RESERVED' },
+        { id: 4, studentName: 'Angela Yogi', itemName: 'Syringe Pack', category: 'Medical', reservedDate: '2024-07-15', status: 'RESERVED' },
+        { id: 5, studentName: 'Saurav Amatya', itemName: 'Raspberry Pi', category: 'Electronics', reservedDate: '2024-07-25', status: 'RESERVED' },
+        { id: 6, studentName: 'Ojeabulu Jude', itemName: 'Stethoscope', category: 'Medical', reservedDate: '2024-08-05', status: 'RESERVED' },
+        { id: 7, studentName: 'Majeed Babs', itemName: 'Network Switcher', category: 'Electronics', reservedDate: '2024-08-10', status: 'RESERVED' },
+        { id: 8, studentName: 'Callistus Obara', itemName: 'Cable Tester', category: 'Electronics', reservedDate: '2024-08-20', status: 'RESERVED' },
+        { id: 9, studentName: 'Joy Okonji', itemName: 'SAP Workbook', category: 'Educational', reservedDate: '2024-08-21', status: 'RESERVED' },
+        { id: 10, studentName: 'Cliff Akinde', itemName: 'Financial Workbook', category: 'Educational', reservedDate: '2024-08-25', status: 'RESERVED' },
       ],
     };
   },
   computed: {
     filteredRequests() {
-      return this.items; // Showing all returned items
+      return this.items.filter((item) =>
+        item.status === 'RESERVED' &&
+        (item.studentName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          item.itemName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+          item.category.toLowerCase().includes(this.searchQuery.toLowerCase()))
+      );
     },
   },
   methods: {
-    retrieveItem(requestId) {
+    cancelReservation(requestId) {
       const request = this.items.find((req) => req.id === requestId);
       if (request) {
-        alert(`Item ${request.itemName} by ${request.studentName} has been retrieved.`);
-        this.notifyStudent(request, 'retrieved');
-      }
-    },
-    uploadItem(requestId) {
-      const request = this.items.find((req) => req.id === requestId);
-      if (request) {
-        alert(`Item ${request.itemName} by ${request.studentName} has been uploaded to the inventory.`);
-        this.notifyStudent(request, 'uploaded');
+        request.status = 'CANCELLED';
+        alert(`Reservation for ${request.itemName} by ${request.studentName} has been cancelled.`);
+        this.notifyStudent(request, 'cancelled');
       }
     },
     viewRequestDetails(requestId) {
@@ -127,17 +133,20 @@ export default {
       this.selectedRequest = null;
     },
     notifyStudent(request, decision) {
-      console.log(`Student ${request.studentName} has been notified that their item ${request.itemName} was ${decision}.`);
+      console.log(`Student ${request.studentName} has been notified that their reservation for ${request.itemName} was ${decision}.`);
     },
     handleCardClick(cardType) {
       this.activeCard = cardType;
+    },
+    filterItems() {
+      // This method will be called on search input change
     },
   },
 };
 </script>
 
 <style scoped>
-.returned-items-page {
+.reserved-items-page {
   display: flex;
   font-family: Arial, sans-serif;
 }
@@ -190,6 +199,26 @@ export default {
   margin-left: 250px;
   padding: 20px;
   width: calc(100% - 250px);
+}
+
+.header-section {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.search-bar {
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-right: 20px;
+}
+
+.admin-image {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .summary-section {
@@ -250,75 +279,33 @@ p {
   background-color: #f9f9f9;
 }
 
-.sort-add-section {
+.details-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #fff;
+  padding: 20px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  width: 400px;
+  border-radius: 10px;
+}
+
+.modal-content {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 40px;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
-.sort-by {
-  padding: 10px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  margin-right: 20px;
-}
-
-.add-new-button {
-  background-color: #90ee90;
+.close-button {
+  align-self: flex-end;
+  padding: 5px 10px;
+  background-color: #ff6961;
+  color: white;
   border: none;
-  padding: 10px 20px;
-  border-radius: 4px;
-  color: white;
+  border-radius: 5px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
+  margin-top: 20px;
 }
-
-.add-new-button:hover {
-  background-color: #76e072;
-}
-
-/* Styles for Action Buttons */
-button {
-  padding: 8px 16px;
-  border-radius: 4px;
-  border: none;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-right: 10px; /* Space between buttons */
-}
-
-button:hover {
-  background-color: #ddd; /* General hover effect for all buttons */
-}
-
-button:focus {
-  outline: none; /* Removes default outline when focused */
-}
-
-button:last-child {
-  margin-right: 0; /* Remove margin for the last button in a row */
-}
-
-/* Retrieve Button */
-button:nth-child(1) {
-  background-color: #28a745;
-  color: white;
-}
-
-button:nth-child(1):hover {
-  background-color: #218838;
-}
-
-/* Upload Button */
-button:nth-child(2) {
-  background-color: #007bff;
-  color: white;
-}
-
-button:nth-child(2):hover {
-  background-color: #0056b3;
-}
-
 </style>
