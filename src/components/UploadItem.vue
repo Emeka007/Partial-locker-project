@@ -2,32 +2,15 @@
     <div class="upload-item">
       <nav class="sidebar">
         <ul>
-          <li>
-            <router-link to="/admindashboard">
-              <i class="fas fa-tachometer-alt"></i> Dashboard
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/item-management">
-              <i class="fas fa-box"></i> Item Management
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/reservation-list">
-              <i class="fas fa-list"></i> Reservation List
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/settings">
-              <i class="fas fa-cog"></i> Settings
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </router-link>
-          </li>
-        </ul>
+        <li><router-link to="/admindashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</router-link></li>
+        <li><router-link to="/item-management"><i class="fas fa-box"></i> Item Management</router-link></li>
+        <li><router-link to="/borrow-requests"><i class="fas fa-handshake"></i> Borrow Requests</router-link></li>
+        <li><router-link to="/reserved-items"><i class="fas fa-calendar-check"></i> Reservation List</router-link></li>
+        <li><router-link to="/unloaded-list"><i class="fas fa-truck"></i> Unloaded Items</router-link></li>
+        <li><router-link to="/adminprofile"><i class="fas fa-user"></i> Profile</router-link></li>
+        <li><router-link to="/admin-settings"><i class="fas fa-cog"></i> Settings</router-link></li>
+        <li><a href="#" @click="handleLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
       </nav>
       <div class="main-content">
         <header>
@@ -106,8 +89,10 @@
   
   .sidebar {
     width: 200px;
-    background-color: #b8dbec;
+    background-color: #f8f9fa;
     padding: 20px;
+    color: white;
+    
   }
   
   .sidebar ul {
@@ -126,20 +111,21 @@
     margin-right: 10px; /* Space between icon and text */
     font-size: 18px;
   }
+  
   .sidebar li a {
-  text-decoration: none;
-  color: #ecf0f1;
-  font-size: 16px;
-  display: block;
-  padding: 10px;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
-}
-
-.sidebar li a:hover {
-  background-color: #34495e;
-}
-
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    display: block;
+    padding: 10px;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .sidebar li a:hover {
+    background-color: #e9ecef;
+  }
+  
   
   .main-content {
     flex: 1;

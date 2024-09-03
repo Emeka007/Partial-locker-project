@@ -34,7 +34,7 @@
             <p>From: {{ item.from }}</p>
             <p>Note: {{ item.note }}</p>
           </div>
-          <button class="book-now-btn" @click="goToReservations">Book Now</button>
+          <button class="book-now-btn" @click="goToBookedItem(item)">Book Now</button>
         </div>
       </div>
       
@@ -88,10 +88,21 @@ export default {
     filterByCategory(categoryName) {
       this.selectedCategory = categoryName;
     },
-    goToReservations() {
-      this.$router.push('/booked-item');
+    goToBookedItem(item) {
+      this.$router.push({
+        name: 'BookedItem',
+        params: {
+          id: 123,
+          title: item.title,
+          description: item.description,
+          author: item.author,
+          lender: item.lender,
+          note: item.note,
+          date: item.date,
     },
+});
   },
+},
 };
 </script>
 

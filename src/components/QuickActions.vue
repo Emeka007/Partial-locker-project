@@ -2,7 +2,6 @@
   <div class="profile">
     <Header class="header" />
     <div class="profile-container">
-      
       <div class="buttons">
         <button @click="viewAllReservations" class="action-button">View All Reservations</button>
         <button @click="updateProfile" class="action-button">Update Profile</button>
@@ -22,12 +21,12 @@ export default {
   },
   methods: {
     viewAllReservations() {
-      // Navigate to the reservations page
-      this.$router.push({ name: 'Reservations' });
+      // Navigate to the reservations page using the correct route name or path
+      this.$router.push({ name: 'ReservationHistory' });
     },
     updateProfile() {
       // Navigate to the update profile page
-      this.$router.push({ name: 'UpdateProfile' });
+      this.$router.push({ name: 'StudentProfile' });
     },
     manageNotifications() {
       // Navigate to the manage notifications page

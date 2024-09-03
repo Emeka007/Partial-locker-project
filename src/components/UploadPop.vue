@@ -2,32 +2,15 @@
     <div class="upload-pop">
       <nav class="sidebar">
         <ul>
-          <li>
-            <router-link to="/admindashboard">
-              <i class="fas fa-tachometer-alt"></i> Dashboard
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/item-management">
-              <i class="fas fa-box"></i> Item Management
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/reservation-list">
-              <i class="fas fa-list"></i> Reservation List
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/settings">
-              <i class="fas fa-cog"></i> Settings
-            </router-link>
-          </li>
-          <li>
-            <router-link to="/logout">
-              <i class="fas fa-sign-out-alt"></i> Logout
-            </router-link>
-          </li>
-        </ul>
+        <li><router-link to="/admindashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</router-link></li>
+        <li><router-link to="/item-management"><i class="fas fa-box"></i> Item Management</router-link></li>
+        <li><router-link to="/borrow-requests"><i class="fas fa-handshake"></i> Borrow Requests</router-link></li>
+        <li><router-link to="/reserved-items"><i class="fas fa-calendar-check"></i> Reservation List</router-link></li>
+        <li><router-link to="/unloaded-list"><i class="fas fa-truck"></i> Unloaded Items</router-link></li>
+        <li><router-link to="/adminprofile"><i class="fas fa-user"></i> Profile</router-link></li>
+        <li><router-link to="/admin-settings"><i class="fas fa-cog"></i> Settings</router-link></li>
+        <li><a href="#" @click="handleLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
       </nav>
       <div class="main-content">
         <header>
@@ -56,7 +39,7 @@
             </div>
             <div class="form-group">
               <label for="status">Status</label>
-              <select id="status" v-model="status">
+              <select id="status" v-model="status" @change="handleStatusChange">
                 <option value="" disabled selected>Select Status</option>
                 <option value="Schedule">Schedule</option>
                 <option value="Archive">Archive</option>
@@ -84,6 +67,11 @@
       handleFileUpload(event) {
         this.files = Array.from(event.target.files);
       },
+      handleStatusChange() {
+        if (this.status === 'Schedule') {
+          this.$router.push('/upload-item'); // Navigate to UploadItem.vue when "Schedule" is selected
+        }
+      },
       submitForm() {
         // Handle form submission
         console.log('Form submitted:', this.itemDescription, this.itemName, this.category, this.status, this.files);
@@ -99,8 +87,10 @@
   
   .sidebar {
     width: 200px;
-    background-color: #b8dbec;
+    background-color: #f8f9fa;
     padding: 20px;
+    color: white;
+    
   }
   
   .sidebar ul {
@@ -122,7 +112,7 @@
   
   .sidebar li a {
     text-decoration: none;
-    color: #ecf0f1;
+    color: #333;
     font-size: 16px;
     display: block;
     padding: 10px;
@@ -131,7 +121,7 @@
   }
   
   .sidebar li a:hover {
-    background-color: #34495e;
+    background-color: #e9ecef;
   }
   
   .main-content {
