@@ -23,8 +23,7 @@
             <p class="welcome-text">Welcome Chukwuemeka!</p>
           </div>
           <div class="header-right">
-            <input type="text" class="search-bar" placeholder="Search...">
-            
+            <input type="text" class="search-bar" placeholder="Search..." />
             <router-link to="/upload-pop">
               <button class="upload-button">Upload new item</button>
             </router-link>
@@ -80,21 +79,27 @@
           <thead>
             <tr>
               <th>Item</th>
-              <th>Locker Number</th>
-              <th>Borrower</th>
-              <th>Issue Date</th>
-              <th>Pickup Date</th>
-              <th>Return Schedule</th>
+              <th>Category</th>
+              <th>Reservable</th>
+              <th>Description</th>
+              <th>Created By</th>
+              <th>Created Date</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="item in borrowedItems" :key="item.id">
               <td>{{ item.itemName }}</td>
-              <td>{{ item.lockerNumber }}</td>
-              <td>{{ item.borrower }}</td>
-              <td>{{ item.issueDate }}</td>
-              <td>{{ item.pickupDate }}</td>
-              <td>{{ item.returnSchedule }}</td>
+              <td>{{ item.category }}</td>
+              <td>{{ item.reservable }}</td>
+              <td>{{ item.description }}</td>
+              <td>{{ item.createdBy }}</td>
+              <td>{{ item.createdDate }}</td>
+              
+              <td>
+                <button @click="editItem(item.id)" class="edit-button">Edit</button>
+                <button @click="deleteItem(item.id)" class="delete-button">Delete</button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -104,36 +109,41 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+
 export default {
   name: 'AdminDashboard',
+  computed: {
+    ...mapState(['borrowedItems']),
+  },
   data() {
     return {
-      selectedTimeFrame: 'this-month', // Default selected time frame
-      selectedRecentUpload: 'recent',  // Default selected recent upload
+      selectedTimeFrame: 'this-month',
+      selectedRecentUpload: 'recent',
       totalitems: 70,
       availableItems: 55,
       returnedItems: 48,
-      // Mock borrowed items data
+      // Updated borrowed items data
       borrowedItems: [
-        { id: 1, itemName: 'Laptop', lockerNumber: 'L123', borrower: 'John Doe', issueDate: '2024-08-01', pickupDate: '2024-08-02', returnSchedule: '2024-08-10' },
-        { id: 2, itemName: 'Projector', lockerNumber: 'L124', borrower: 'Jane Smith', issueDate: '2024-08-03', pickupDate: '2024-08-04', returnSchedule: '2024-08-11' },
-        { id: 3, itemName: 'Camera', lockerNumber: 'L125', borrower: 'Alice Johnson', issueDate: '2024-08-05', pickupDate: '2024-08-06', returnSchedule: '2024-08-12' },
-        { id: 4, itemName: 'Microphone', lockerNumber: 'L126', borrower: 'Bob Brown', issueDate: '2024-08-07', pickupDate: '2024-08-08', returnSchedule: '2024-08-15' },
-        { id: 5, itemName: 'Speaker', lockerNumber: 'L127', borrower: 'Carol White', issueDate: '2024-08-09', pickupDate: '2024-08-10', returnSchedule: '2024-08-20' },
-        { id: 6, itemName: 'Projector Screen', lockerNumber: 'L128', borrower: 'David Green', issueDate: '2024-08-11', pickupDate: '2024-08-12', returnSchedule: '2024-08-18' },
-        { id: 7, itemName: 'Printer', lockerNumber: 'L129', borrower: 'Emma Wilson', issueDate: '2024-08-13', pickupDate: '2024-08-14', returnSchedule: '2024-08-21' },
-        { id: 8, itemName: 'Whiteboard', lockerNumber: 'L130', borrower: 'Frank Harris', issueDate: '2024-08-15', pickupDate: '2024-08-16', returnSchedule: '2024-08-25' },
-        { id: 9, itemName: 'Extension Cord', lockerNumber: 'L131', borrower: 'Grace Martinez', issueDate: '2024-08-17', pickupDate: '2024-08-18', returnSchedule: '2024-08-26' },
-        { id: 10, itemName: 'Flip Chart', lockerNumber: 'L132', borrower: 'Henry Clark', issueDate: '2024-08-19', pickupDate: '2024-08-20', returnSchedule: '2024-08-27' },
-        { id: 11, itemName: 'Tablet', lockerNumber: 'L133', borrower: 'Ivy Lewis', issueDate: '2024-08-21', pickupDate: '2024-08-22', returnSchedule: '2024-08-30' },
-        { id: 12, itemName: 'Portable Speaker', lockerNumber: 'L134', borrower: 'Jack Young', issueDate: '2024-08-23', pickupDate: '2024-08-24', returnSchedule: '2024-09-01' },
-        { id: 13, itemName: 'Laptop Stand', lockerNumber: 'L135', borrower: 'Kelly King', issueDate: '2024-08-25', pickupDate: '2024-08-26', returnSchedule: '2024-09-05' },
-        { id: 14, itemName: 'HDMI Cable', lockerNumber: 'L136', borrower: 'Leo Scott', issueDate: '2024-08-27', pickupDate: '2024-08-28', returnSchedule: '2024-09-07' }
+        { id: 1, itemName: 'Raspberry Pi', category: 'Technology', reservable: 'Yes', description: 'Single-board computer', createdBy: 'Admin', createdDate: '2024-08-01' },
+        { id: 2, itemName: 'Syringe Pack', category: 'Nursing', reservable: 'Yes', description: 'Pack of syringes', createdBy: 'Admin', createdDate: '2024-08-03' },
+        { id: 3, itemName: 'Defibrillator', category: 'Nursing', reservable: 'No', description: 'Portable defibrillator', createdBy: 'Admin', createdDate: '2024-08-05' },
+        { id: 4, itemName: 'Chemistry Lab Kit', category: 'Chemistry', reservable: 'Yes', description: 'Kit for chemistry experiments', createdBy: 'Admin', createdDate: '2024-08-07' },
+        { id: 5, itemName: 'SAP TOOL', category: 'Business', reservable: 'Yes', description: 'Software for business management', createdBy: 'Admin', createdDate: '2024-08-09' },
+        { id: 6, itemName: 'Cable Tester', category: 'Technology', reservable: 'No', description: 'Device for testing cables', createdBy: 'Admin', createdDate: '2024-08-11' },
+        { id: 7, itemName: 'Nursing Simulation Manikin', category: 'Nursing', reservable: 'Yes', description: 'Manikin for nursing simulations', createdBy: 'Admin', createdDate: '2024-08-13' },
+        { id: 8, itemName: 'Blood Pressure Monitor', category: 'Nursing', reservable: 'Yes', description: 'Device for monitoring blood pressure', createdBy: 'Admin', createdDate: '2024-08-15' },
+        { id: 9, itemName: 'Engineering Tools', category: 'Engineering', reservable: 'Yes', description: 'Set of engineering tools', createdBy: 'Admin', createdDate: '2024-08-17' },
+        { id: 10, itemName: 'Financial Management', category: 'Business', reservable: 'No', description: 'Software for financial management', createdBy: 'Admin', createdDate: '2024-08-19' },
+        { id: 11, itemName: 'Arduino Uno Kit', category: 'Technology', reservable: 'Yes', description: 'Microcontroller kit', createdBy: 'Admin', createdDate: '2024-08-21' },
+        { id: 12, itemName: 'Network Switch', category: 'Technology', reservable: 'Yes', description: 'Device for network management', createdBy: 'Admin', createdDate: '2024-08-23' },
+        { id: 13, itemName: 'Stethoscope', category: 'Nursing', reservable: 'No', description: 'Medical stethoscope', createdBy: 'Admin', createdDate: '2024-08-25' }
       ],
+
       notifications: [
-        { id: 1, message: 'New item added: Laptop' },
-        { id: 2, message: 'Projector was returned' }
-      ]
+        { id: 1, message: 'New item added: Raspberry Pi' },
+        { id: 2, message: 'Defibrillator was returned' },
+      ],
     };
   },
   methods: {
@@ -215,13 +225,6 @@ export default {
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  margin-right: 20px;
-}
-
-.admin-image {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
   margin-right: 20px;
 }
 
@@ -339,27 +342,56 @@ p {
 }
 
 .borrowed-items-section {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 .borrowed-items-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
 }
 
 .borrowed-items-table th,
 .borrowed-items-table td {
-  border: 1px solid #ccc;
-  padding: 10px;
+  border: 1px solid #ddd;
+  padding: 8px;
   text-align: left;
 }
 
 .borrowed-items-table th {
-  background-color: #f2f2f2;
+  background-color: #f4f4f4;
 }
 
-.borrowed-items-table tbody tr:nth-child(even) {
+.borrowed-items-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+.edit-button {
+  background-color: #007bff; /* Blue background */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-right: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.edit-button:hover {
+  background-color: #0056b3;
+}
+
+.delete-button {
+  background-color: #dc3545; /* Red background */
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
 }
 </style>

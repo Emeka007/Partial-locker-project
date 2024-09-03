@@ -1,21 +1,22 @@
 // src/store.js
 import { createStore } from 'vuex';
 
-const store = createStore({
-  state() {
-    return {
-      // Define your state here
-    };
+export default createStore({
+  state: {
+    borrowedItems: [
+      { id: 1, itemName: 'Raspberry Pi', category: 'Technology', reservable: 'Yes', description: 'Single-board computer', createdBy: 'Admin', createdDate: '2024-08-01' },
+      // Add more initial items if needed
+    ],
   },
   mutations: {
-    // Define your mutations here
+    ADD_ITEM(state, item) {
+      state.borrowedItems.push(item);
+    },
   },
   actions: {
-    // Define your actions here
+    addItem({ commit }, item) {
+      commit('ADD_ITEM', item);
+    },
   },
-  getters: {
-    // Define your getters here
-  }
 });
 
-export default store;

@@ -1,7 +1,7 @@
 <template>
-    <div class="upload-item">
-      <nav class="sidebar">
-        <ul>
+  <div class="upload-item">
+    <nav class="sidebar">
+      <ul>
         <li><router-link to="/admindashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</router-link></li>
         <li><router-link to="/item-management"><i class="fas fa-box"></i> Item Management</router-link></li>
         <li><router-link to="/borrow-requests"><i class="fas fa-handshake"></i> Borrow Requests</router-link></li>
@@ -11,76 +11,109 @@
         <li><router-link to="/admin-settings"><i class="fas fa-cog"></i> Settings</router-link></li>
         <li><a href="#" @click="handleLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
       </ul>
-      </nav>
-      <div class="main-content">
-        <header>
-          <h3>Upload Item</h3>
-          <button class="done-button">Done</button>
-        </header>
-        <form @submit.prevent="submitForm" class="upload-form">
-          <div class="form-column left-column">
-            <div class="file-upload">
-              <label>Drop files to upload or select</label>
-              <input type="file" @change="handleFileUpload" multiple />
+
+    </nav>
+    <div class="main-content">
+      <header>
+        <h3>Upload Item</h3>
+        <button class="done-button">Done</button>
+      </header>
+      <form @submit.prevent="submitForm" class="upload-form">
+        <div class="form-column left-column">
+          <div class="file-upload">
+            <label>Drop files to upload or select</label>
+            <input type="file" @change="handleFileUpload" multiple />
+          </div>
+        </div>
+        <div class="form-column right-column">
+          <!-- Form Fields -->
+          <div class="form-group">
+            <label for="item-description">Item description</label>
+            <input type="text" id="item-description" v-model="itemDescription" class="item-description-input" />
+          </div>
+          <div class="form-group">
+            <label for="item-name">Item Name</label>
+            <input type="text" id="item-name" v-model="itemName" placeholder="Item Name" />
+          </div>
+          <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" v-model="category">
+              <option value="" disabled>Select Category</option>
+              <option value="Technology">Technology</option>
+              <option value="Nursing">Nursing</option>
+              <option value="Business">Business</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Chemistry">Chemistry</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="reservable">Reservable</label>
+            <input type="checkbox" id="reservable" v-model="reservable" />
+          </div>
+          <div class="form-group">
+            <label for="approval">Approval</label>
+            <input type="checkbox" id="approval" v-model="approval" />
+          </div>
+          <div class="form-group">
+            <label>Item timeline</label>
+            <div class="timeline-group">
+              <select id="timeline-from" v-model="timelineFrom">
+                <option value="" disabled>From</option>
+                <option v-for="option in timelineOptions" :key="option" :value="option">{{ option }}</option>
+              </select>
+              <select id="timeline-to" v-model="timelineTo">
+                <option value="" disabled>To</option>
+                <option v-for="option in timelineOptions" :key="option" :value="option">{{ option }}</option>
+              </select>
             </div>
           </div>
-          <div class="form-column right-column">
-            <div class="form-group">
-              <label for="item-description">Item description</label>
-              <input type="text" id="item-description" v-model="itemDescription" class="item-description-input" />
-            </div>
-            <div class="form-group">
-              <label for="item-name"></label>
-              <input type="text" id="item-name" v-model="itemName" placeholder="Item Name" />
-            </div>
-            <div class="form-group">
-              <label for="category"></label>
-              <input type="text" id="category" v-model="category" placeholder="Category" />
-            </div>
-            <div class="form-group">
-              <label>Item timeline</label>
-              <div class="timeline-group">
-                <select id="timeline-from" v-model="timelineFrom">
-                  <option value="" disabled selected>From</option>
-                  <option v-for="option in timelineOptions" :key="option" :value="option">{{ option }}</option>
-                </select>
-                <select id="timeline-to" v-model="timelineTo">
-                  <option value="" disabled selected>To</option>
-                  <option v-for="option in timelineOptions" :key="option" :value="option">{{ option }}</option>
-                </select>
-              </div>
-            </div>
-            <button type="submit">Submit</button>
-          </div>
-        </form>
-      </div>
+          <button type="submit">Submit</button>
+        </div>
+      </form>
     </div>
-  </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        itemDescription: '',
-        itemName: '',
-        category: '',
-        timelineFrom: '',
-        timelineTo: '',
-        files: [],
-        timelineOptions: ['Option 1', 'Option 2', 'Option 3'], // Replace these with actual options
+  </div>
+</template>
+
+<script>
+import { mapActions } from 'vuex';
+
+export default {
+  data() {
+    return {
+      itemDescription: '',
+      itemName: '',
+      category: '',
+      reservable: true,
+      approval: true,
+      timelineFrom: '',
+      timelineTo: '',
+      files: [],
+      timelineOptions: ['Option 1', 'Option 2', 'Option 3'],
+    };
+  },
+  methods: {
+    ...mapActions(['addItem']),
+    handleFileUpload(event) {
+      this.files = Array.from(event.target.files);
+    },
+    submitForm() {
+      const newItem = {
+        id: Date.now(),
+        itemName: this.itemName,
+        category: this.category,
+        reservable: this.reservable ? 'Yes' : 'No',
+        description: this.itemDescription,
+        createdBy: 'Admin',
+        createdDate: new Date().toISOString().split('T')[0],
       };
+      this.addItem(newItem);
+      console.log('Form submitted:', newItem);
     },
-    methods: {
-      handleFileUpload(event) {
-        this.files = Array.from(event.target.files);
-      },
-      submitForm() {
-        // Handle form submission
-        console.log('Form submitted:', this.itemDescription, this.itemName, this.category, this.timelineFrom, this.timelineTo, this.files);
-      },
-    },
-  };
-  </script>
+  },
+};
+</script>
+
+
   
   <style scoped>
   .upload-item {
