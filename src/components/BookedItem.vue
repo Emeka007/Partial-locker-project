@@ -1,33 +1,18 @@
 <template>
   <div class="booked-item">
     <Header />
-
-    <!-- Title and Description Above the Image -->
     <div class="item-header">
       <h1>{{ item.title }}</h1>
     </div>
-
-    <!-- Image -->
-    <img :src="item.image" alt="Item Image" class="item-image" />
-
-    <!-- Title and Author Centered Below the Image -->
+    <img :src="require(`@/assets/${item.imageSrc}`)" alt="Item Image" class="item-image" />
     <div class="centered-info">
       <h1>{{ item.title }}</h1>
-      <p><strong>Author:</strong> {{ item.author }}</p>
+      <p><strong>Lender:</strong> {{ item.from }}</p>
     </div>
-
-    <!-- Gap -->
     <div class="spacer"></div>
-
-    <!-- Details Section -->
     <div class="details">
-      <p><strong>About:</strong> {{ item.description }}</p>
-      <p><strong>Lender:</strong> {{ item.lender }}</p>
       <p><strong>Note:</strong> {{ item.note }}</p>
-      <p><strong>Date:</strong> {{ item.date }}</p>
     </div>
-
-    <!-- Action Buttons -->
     <div class="actions">
       <button class="book-now" @click="bookNow">Book Now</button>
       <button class="chat" @click="chat">Chat Now</button>
@@ -36,26 +21,22 @@
 </template>
 
 <script>
-import Header from '@/components/Header.vue'; 
-import imageSrc from '@/assets/Raspberry_Pi_B+_illustration.svg.png'; // Import image
+import Header from '@/components/Header.vue';
 
 export default {
   components: {
     Header,
   },
-  data() {
-    return {
-      item: {
-        image: imageSrc, // Use the imported image
-        title: 'Raspberry Pi',
-        description: `The major substantive change in this edition concerns VERBS. I have abandoned the ‘Verb Group’. The ‘Vgrp’ was pedagogically convenient but it did not do justice to the facts of how auxiliary verbs figure the structure of VP. The treatment of auxiliaries is now more standard. Each auxiliary is treated as taking a VP complement. This allows me to maintain the idea that complements of lexical verbs are their sisters, combining with them to form a (‘basic’) VP.`,
-        author: 'Author Name',
-        lender: 'Chukwuemeka Obanya',
-        note: `I’ll be letting out this book for about a month or more, send a message if interested in booking.`,
-        date: '16th - 31st July 2024',
-      }
-    };
-  },
+  props: {
+  item: {
+    type: Object,
+    default: () => ({})
+  }
+},
+created() {
+  console.log('Received item prop:', this.item);
+},
+
   methods: {
     bookNow() {
       this.$router.push('/reservations');
@@ -66,6 +47,9 @@ export default {
   },
 };
 </script>
+
+
+
 
 <style scoped>
 .booked-item {

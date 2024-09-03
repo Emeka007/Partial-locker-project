@@ -57,7 +57,12 @@ const routes = [
     component: () => import('@/components/ReservationHistory.vue')
   },
   
-  { path: '/booked-item', name: 'BookedItem', component: BookedItem, props: true },
+  {
+    path: '/booked-item/:item',
+    name: 'BookedItem',
+    component: BookedItem,
+    props: route => ({ item: JSON.parse(route.params.item) })
+  },
   {
     path: '/scheduled-items',
     name: 'ScheduledItems',

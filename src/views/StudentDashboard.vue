@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard">
-    <Header /> <!-- The Header component with the search bar -->
+    <Header />
 
     <main class="main-content">
       <div class="welcome-section">
@@ -27,14 +27,27 @@
       <!-- Top Search Section -->
       <div class="top-search-section">
         <h5>Top Search</h5>
-        <div class="top-search-item" v-for="item in filteredTopSearchItems" :key="item.title">
-          <img :src="require(`@/assets/${item.imageSrc}`)" :alt="item.title" class="top-search-image" />
+        <div 
+          class="top-search-item" 
+          v-for="item in filteredTopSearchItems" 
+          :key="item.title"
+        >
+          <img 
+            :src="require(`@/assets/${item.imageSrc}`)" 
+            :alt="item.title" 
+            class="top-search-image" 
+          />
           <div class="top-search-content">
             <h3>{{ item.title }}</h3>
             <p>From: {{ item.from }}</p>
             <p>Note: {{ item.note }}</p>
           </div>
-          <button class="book-now-btn" @click="goToBookedItem(item)">Book Now</button>
+          <button 
+            class="book-now-btn" 
+            @click="goToReservations(item)"
+          >
+            Book Now
+          </button>
         </div>
       </div>
       
@@ -53,7 +66,7 @@ export default {
     return {
       studentName: 'John Doe',
       studentId: '123456',
-      selectedCategory: null, // Track the selected category
+      selectedCategory: null,
       categories: [
         { name: 'Technology', icon: 'memory' },
         { name: 'Nursing', icon: 'medical_services' },
@@ -85,24 +98,19 @@ export default {
     },
   },
   methods: {
-    filterByCategory(categoryName) {
-      this.selectedCategory = categoryName;
-    },
-    goToBookedItem(item) {
-      this.$router.push({
-        name: 'BookedItem',
-        params: {
-          id: 123,
-          title: item.title,
-          description: item.description,
-          author: item.author,
-          lender: item.lender,
-          note: item.note,
-          date: item.date,
-    },
-});
+  filterByCategory(categoryName) {
+    this.selectedCategory = categoryName;
   },
-},
+  goToReservations(item) {
+    const itemString = JSON.stringify(item);
+    console.log('Navigating with item:', itemString);
+    this.$router.push({ 
+      name: 'BookedItem', 
+      params: { item: itemString }
+    });
+  },
+}
+
 };
 </script>
 
