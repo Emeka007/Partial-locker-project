@@ -8,6 +8,7 @@
         <li><router-link to="/borrow-requests"><i class="fas fa-handshake"></i> Borrow Requests</router-link></li>
         <li><router-link to="/reserved-items"><i class="fas fa-calendar-check"></i> Reservation List</router-link></li>
         <li><router-link to="/unloaded-list"><i class="fas fa-truck"></i> Unloaded Items</router-link></li>
+        <li><router-link to="/adminchat"><i class="fas fa-comments"></i> Admin Chat</router-link></li> 
         <li><router-link to="/adminprofile"><i class="fas fa-user"></i> Profile</router-link></li>
         <li><router-link to="/admin-settings"><i class="fas fa-cog"></i> Settings</router-link></li>
         <li><a href="#" @click="handleLogout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>

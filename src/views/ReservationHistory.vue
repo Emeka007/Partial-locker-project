@@ -428,5 +428,16 @@ ul {
 .barcode svg {
   height: 50px; /* Adjust height of barcode */
 }
+.top-search-section {
+  margin-bottom: 20px; /* Keep the existing margin for spacing within the section */
+  padding-bottom: 50px; /* Add padding at the bottom to create space */
+}
+
+/* Optional: Ensure the padding is responsive by using a media query */
+@media (max-width: 768px) {
+  .top-search-section {
+    padding-bottom: 30px; /* Adjust for smaller screens */
+  }
+}
 </style>
 

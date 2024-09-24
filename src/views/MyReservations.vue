@@ -13,7 +13,7 @@
       </div>
     </div>
 
-    <!-- New Section with Booked, Received, Returned -->
+    <!-- Status Section -->
     <section class="status-section">
       <div class="status">
         <span :class="{ highlighted: currentStatus === 'Booked' }" @click="currentStatus = 'Booked'">Booked</span>
@@ -24,14 +24,11 @@
 
     <!-- Top Search Section -->
     <div class="top-search-section">
-      
-
-      <!-- Top Search Items from Data -->
       <div 
         class="top-search-item" 
         v-for="item in topSearchItems" 
         :key="item.id"
-            >
+      >
         <img :src="require(`@/assets/${item.imageSrc}`)" :alt="item.altText" class="top-search-image" />
         <div class="top-search-content">
           <h3>{{ item.title }}</h3>
@@ -40,13 +37,10 @@
         </div>
         <div class="barcode">
           <svg :id="'barcode-topsearch-' + item.id"></svg>
+          <p class="barcode-id">{{ item.id }}</p> <!-- Display ID below the barcode -->
         </div>
       </div>
     </div>
-
-    
-
-  
   </div>
 </template>
 
@@ -60,15 +54,14 @@ export default {
     return {
       currentStatus: 'Booked',
       categories: [
-      { name: 'Technology', icon: 'memory' },
-      { name: 'Nursing', icon: 'medical_services' },
-      { name: 'Business', icon: 'business_center' },
-      { name: 'Engineering', icon: 'engineering' },
-      { name: 'Chemistry', icon: 'science' },
-
+        { name: 'Technology', icon: 'memory' },
+        { name: 'Nursing', icon: 'medical_services' },
+        { name: 'Business', icon: 'business_center' },
+        { name: 'Engineering', icon: 'engineering' },
+        { name: 'Chemistry', icon: 'science' },
       ],
       topSearchItems: [
-        { id:  '847362509418', imageSrc: 'Raspberry_Pi_B+_illustration.svg.png', altText: 'Raspberry Pi', title: 'Raspberry Pi', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
+        { id: '847362509418', imageSrc: 'Raspberry_Pi_B+_illustration.svg.png', altText: 'Raspberry Pi', title: 'Raspberry Pi', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
         { id: '905731642820', imageSrc: 'Syringe-Pack.png', altText: 'Syringe Pack', title: 'Syringe Pack', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
         { id: '264839750194', imageSrc: 'Defibrillator.jpg', altText: 'Defibrillator', title: 'Defibrillator', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
         { id: '398275610947', imageSrc: 'chemlabkit.jpg', altText: 'Chemistry Lab Kit', title: 'Chemistry Lab Kit', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...' },
@@ -87,10 +80,9 @@ export default {
     this.generateBarcodes();
   },
   methods: {
-    generateBarcodes(lockerNumber) {
-      // Generate barcodes for top search items
+    generateBarcodes() {
       this.topSearchItems.forEach(item => {
-        JsBarcode(`#barcode-topsearch-${item.id}`, item.id,lockerNumber, {
+        JsBarcode(`#barcode-topsearch-${item.id}`, item.id, {
           format: 'CODE39',
           displayValue: false,
           lineColor: '#0aa',
@@ -99,7 +91,6 @@ export default {
         });
       });
       
-      // Generate barcode for each current reservation
       this.currentReservations.forEach(reservation => {
         JsBarcode(`#barcode-${reservation.lockerNumber}`, reservation.lockerNumber, {
           format: 'CODE39',
@@ -109,7 +100,6 @@ export default {
         });
       });
 
-      // Generate barcode for each reservation history item
       this.reservationHistory.forEach(reservation => {
         JsBarcode(`#barcode-history-${reservation.id}`, reservation.id, {
           format: 'CODE39',
@@ -120,16 +110,10 @@ export default {
         });
       });
     },
-    goToBookedItem(id) {
-      // Handle click for booked items
-      this.$router.push({ name: 'BookedItem', params: { id } });
-    },
     navigateToReservationHistory(status) {
-      // Handle click for reservation history
       this.$router.push({ name: 'ReservationHistory', params: { status } });
     },
     navigateToReturnedItem(status) {
-      // Handle click for returned items
       this.$router.push({ name: 'ReturnedItem', params: { status } });
     }
   }
@@ -150,16 +134,12 @@ h2, h5 {
   margin-bottom: 20px;
 }
 
-.category-container {
-  display: flex;
-  gap: 10px;
-}
-
 /* Category Section */
 .categories {
   padding: 20px;
   background-color: #f4f4f9;
   border-radius: 8px;
+  text-align: center;
 }
 
 .categories h5 {
@@ -170,14 +150,15 @@ h2, h5 {
 
 .category-container {
   display: flex;
-  overflow-x: auto;
-  padding: 10px 0;
+  justify-content: center;
   gap: 15px;
+  flex-wrap: wrap;
+  padding: 10px 0;
 }
 
 .category {
   display: flex;
-  align-items: center;
+  align-items: center; /* Align items horizontally */
   padding: 10px 15px;
   background-color: #ffffff;
   border-radius: 8px;
@@ -196,7 +177,7 @@ h2, h5 {
 .category .material-icons {
   font-size: 28px;
   color: #e10e49;
-  margin-right: 10px;
+  margin-right: 10px; /* Adjust margin to move icon to the right of the text */
 }
 
 .category-name {
@@ -204,11 +185,6 @@ h2, h5 {
   font-weight: 500;
 }
 
-
-.material-icons {
-  font-size: 24px;
-  margin-right: 5px;
-}
 /* Status Section */
 .status-section {
   margin-top: 30px;
@@ -229,22 +205,21 @@ h2, h5 {
   padding: 10px 20px;
   cursor: pointer;
   transition: color 0.3s, border-bottom 0.3s;
-  position: relative;
 }
 
 .status span.highlighted {
-  color: #0a0; /* Green color for highlighted status */
-  border-bottom: 2px solid #0a0; /* Green underline for highlighted status */
+  color: #0a0;
+  border-bottom: 2px solid #0a0;
 }
 
 .status span:not(.highlighted) {
   color: #666;
-  border-bottom: 2px solid transparent; /* No underline for non-highlighted status */
+  border-bottom: 2px solid transparent;
 }
 
-
-.highlighted {
-  font-weight: bold;
+/* Top Search Section */
+.top-search-section {
+  margin-bottom: 20px;
 }
 
 .top-search-item {
@@ -263,8 +238,17 @@ h2, h5 {
   flex-grow: 1;
 }
 
+.barcode {
+  text-align: center; /* Center the barcode and ID */
+}
+
 .barcode svg {
   margin-left: 10px;
+}
+
+.barcode-id {
+  font-size: 0.8rem; /* Adjust font size for barcode ID */
+  color: #333; /* Optional: Change the color */
 }
 
 .empty-message {
@@ -276,6 +260,15 @@ h2, h5 {
   justify-content: space-between;
   margin-bottom: 10px;
 }
+.top-search-section {
+  margin-bottom: 20px; /* Keep the existing margin for spacing within the section */
+  padding-bottom: 50px; /* Add padding at the bottom to create space */
+}
+
+/* Optional: Ensure the padding is responsive by using a media query */
+@media (max-width: 768px) {
+  .top-search-section {
+    padding-bottom: 30px; /* Adjust for smaller screens */
+  }
+}
 </style>
-
-

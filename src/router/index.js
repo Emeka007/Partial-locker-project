@@ -19,11 +19,11 @@ const routes = [
   { path: '/adminprofile', name: 'AdminProfile', component: AdminProfile },
   { path: '/admindashboard', name: 'AdminDashboard', component: AdminDashboard },
   {
-    path: '/booked-item/:item',
+    path: '/booked-item/:id',
     name: 'BookedItem',
-    component: BookedItem,
-    props: route => ({ item: JSON.parse(route.params.item) })
+    component: BookedItem
   },
+  
   { path: '/quickactions',    name: 'QuickActions',    component: QuickActions  },
   { path: '/upload-item',    name: 'UploadItem',    component: UploadItem,  },
   { path: '/upload-pop',    name: 'UploadPop',    component: UploadPop,  },

@@ -8,6 +8,7 @@ import StudentProfile from '@/views/StudentProfile.vue';
 import StudentChat from '@/views/StudentChat.vue';
 import StudentOpenChats from '@/components/StudentOpenChats.vue';
 
+import AdminChat from '@/views/AdminChat.vue';
 import QuickActions from '@/components/QuickActions.vue';
 import ItemManagement from '@/components/ItemManagement.vue';
 import BorrowRequests from '@/components/BorrowRequests.vue';
@@ -34,6 +35,7 @@ const routes = [
   { path: '/admindashboard', name: 'AdminDashboard', component: AdminDashboard }, 
   { path: '/profile', name: 'StudentProfile', component: StudentProfile },
   { path: '/studentchat', name: 'StudentChat', component: StudentChat },
+  { path: '/adminchat', name: 'AdminChat', component: AdminChat },
   { path: '/item-management', name: 'ItemManagement', component: ItemManagement },
   { path: '/borrow-requests', name: 'BorrowRequests', component: BorrowRequests },
   { path: '/loading-list', name: 'LoadingList', component: LoadingList },
@@ -52,6 +54,13 @@ const routes = [
     props: true
   },
   {
+    path: '/admin-open-chat/:contactId',
+    name: 'AdminOpenChat',
+    component: () => import('@/components/AdminOpenChat.vue'),  // Ensure that the path to the component is correct
+    props: true
+  },
+  
+    {
     path: '/reservation-history',
     name: 'ReservationHistory',
     component: () => import('@/components/ReservationHistory.vue')

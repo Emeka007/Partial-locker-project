@@ -1,39 +1,42 @@
 <template>
   <div class="profile">
     <Header />
-    <h1>Profile</h1>
 
-    <!-- Edit Button -->
-    <button @click="toggleEditMode" class="edit-button">
-      {{ isEditing ? 'Save' : 'Edit' }}
-    </button>
+    <div class="profile-header">
+      <h1>Profile</h1>
+
+      <!-- Edit Button -->
+      <button @click="toggleEditMode" class="edit-button">
+        {{ isEditing ? 'Save' : 'Edit' }}
+      </button>
+    </div>
 
     <!-- Basic Information Section -->
-    <section>
+    <section class="profile-section">
       <h2>Basic Information</h2>
       <dl>
-        <div>
+        <div class="form-row">
           <dt>Student ID</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.studentId" />
             <span v-else>{{ profile.studentId }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Name</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.fullName" />
             <span v-else>{{ profile.fullName }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Program</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.program" />
             <span v-else>{{ profile.program }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Study Period</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.studyPeriod" />
@@ -44,31 +47,31 @@
     </section>
 
     <!-- Information Section -->
-    <section>
+    <section class="profile-section">
       <h2>Information</h2>
       <dl>
-        <div>
+        <div class="form-row">
           <dt>Attendance</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.attendance" />
             <span v-else>{{ profile.attendance }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>PSP</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.psp" />
             <span v-else>{{ profile.psp }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Completed Studies</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.completedStudies" />
             <span v-else>{{ profile.completedStudies }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Student Exchange</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.studentExchange" />
@@ -79,45 +82,45 @@
     </section>
 
     <!-- Personal Details Section -->
-    <section>
+    <section class="profile-section">
       <h2>Personal Details</h2>
       <dl>
-        <div>
+        <div class="form-row">
           <dt>Date of Birth</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.dateOfBirth" />
             <span v-else>{{ profile.dateOfBirth }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Social Security Number</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.socialSecurityNumber" />
             <span v-else>{{ profile.socialSecurityNumber }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Nationality</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.nationality" />
             <span v-else>{{ profile.nationality }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Sex/Gender</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.gender" />
             <span v-else>{{ profile.gender }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Mother Tongue</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.motherTongue" />
             <span v-else>{{ profile.motherTongue }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Contact Language</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.contactLanguage" />
@@ -128,24 +131,24 @@
     </section>
 
     <!-- Contact Information Section -->
-    <section>
+    <section class="profile-section">
       <h2>Contact Information</h2>
       <dl>
-        <div>
+        <div class="form-row">
           <dt>Email</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.email" />
             <span v-else>{{ profile.email }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Phone Number</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.phoneNumber" />
             <span v-else>{{ profile.phoneNumber }}</span>
           </dd>
         </div>
-        <div>
+        <div class="form-row">
           <dt>Address</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.address" />
@@ -156,10 +159,10 @@
     </section>
 
     <!-- Settings Section -->
-    <section>
+    <section class="profile-section">
       <h2>Settings</h2>
       <dl>
-        <div>
+        <div class="form-row">
           <dt>Language of School Education</dt>
           <dd>
             <input v-if="isEditing" v-model="profile.schoolLanguage" />
@@ -222,52 +225,99 @@ export default {
 
 <style scoped>
 .profile {
+  max-width: 800px;
+  margin: 0 auto;
   padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-h1 {
-  font-size: 24px;
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 20px;
 }
 
+h1 {
+  font-size: 28px;
+  color: #333;
+}
+
 h2 {
-  font-size: 20px;
-  margin-bottom: 10px;
+  font-size: 22px;
+  margin-bottom: 15px;
+  color: #555;
+}
+
+.profile-section {
+  margin-bottom: 30px;
 }
 
 dl {
   display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
+  grid-template-columns: 150px 1fr;
+  row-gap: 10px;
+  column-gap: 20px;
 }
 
 dt {
   font-weight: bold;
+  color: #333;
 }
 
 dd {
   margin: 0;
+  font-size: 16px;
+}
+
+.form-row {
+  display: flex;
+  align-items: center;
 }
 
 input {
-  padding: 5px;
+  padding: 10px;
   font-size: 16px;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #007bff;
 }
 
 .edit-button {
   background-color: #007bff;
   color: white;
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   font-size: 16px;
-  margin-bottom: 20px;
+  transition: background-color 0.3s ease;
 }
 
 .edit-button:hover {
   background-color: #0056b3;
+}
+
+@media (max-width: 768px) {
+  dl {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .edit-button {
+    margin-top: 10px;
+  }
 }
 </style>

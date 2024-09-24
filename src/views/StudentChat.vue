@@ -18,7 +18,7 @@
     <!-- Messages and Email Section -->
     <div class="messages-email">
       <div class="messages">Messages</div>
-      <div class="email">Email</div>
+      <div class="email">Time</div>
     </div>
 
     <!-- Chats Section -->
@@ -32,12 +32,16 @@
         <div class="chat-time">{{ chat.time }}</div>
       </div>
     </div>
+
+    <!-- Navigation Bar Placeholder -->
+    <div class="nav-bar">
+      
+    </div>
   </div>
 </template>
 
 <script>
 import Header from '@/components/Header.vue'; 
-
 
 export default {
   components: {
@@ -49,13 +53,13 @@ export default {
       people: [
         { id: 1, name: 'John Doe', image: require('@/assets/Hayley.jpg') },
         { id: 2, name: 'Jane Smith', image: require('@/assets/jake.jpg') }, 
-        { id: 3, name: 'Alice Johnson', image: require('@/assets/john.jpg') } 
+        { id: 3, name: 'Alice Johnson', image: require('@/assets/student.jpg') } 
       ],
       chats: [
         { id: 1, name: 'Angela Yogi', image: require('@/assets/Hayley.jpg'), message: 'Hi There! Are you available to chat?', time: '12:00' },
         { id: 2, name: 'Angela Yogi', image: require('@/assets/Hayley.jpg'), message: 'Hi There! Are you available to chat?', time: '12:15' },
-        { id: 3, name: 'Saurav Amatya', image: require('@/assets/john.jpg'), message: 'Hi There! Are you available to chat?', time: '12:30' },
-        { id: 4, name: 'Saurav Amatya', image: require('@/assets/john.jpg'), message: 'Hi There! Are you available to chat?', time: '12:45' },
+        { id: 3, name: 'Saurav Amatya', image: require('@/assets/student.jpg'), message: 'Hi There! Are you available to chat?', time: '12:30' },
+        { id: 4, name: 'Saurav Amatya', image: require('@/assets/student.jpg'), message: 'Hi There! Are you available to chat?', time: '12:45' },
         { id: 5, name: 'Chukwuemeka Obanya', image: require('@/assets/jake.jpg'), message: 'Hi There! Are you available to chat?', time: '13:00' },
         { id: 6, name: 'Chukwuemeka Obanya', image: require('@/assets/jake.jpg'), message: 'Hi There! Are you available to chat?', time: '13:15' }
       ]
@@ -131,7 +135,8 @@ input[type="text"] {
 }
 
 .chats-section {
-  margin-top: 20px;
+  margin-top: 20px; /* Space above chats */
+  margin-bottom: 20px; /* Added space below chats */
 }
 
 .chats-item {
@@ -167,5 +172,13 @@ input[type="text"] {
   font-size: 14px;
   color: #666;
   white-space: nowrap; /* Prevents the time from wrapping */
+}
+
+.nav-bar {
+  margin-top: 20px; /* Space above the nav bar */
+  padding: 10px; /* Optional padding for the nav bar */
+  background-color: #f8f9fa; /* Example background color */
+  border-top: 1px solid #ddd; /* Optional border */
+  text-align: center; /* Center align text */
 }
 </style>

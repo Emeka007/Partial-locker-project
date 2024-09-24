@@ -192,19 +192,25 @@ ul {
   padding: 20px;
   background-color: #f4f4f9;
   border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the entire section */
 }
 
 .categories h5 {
   font-size: 1.2rem;
   color: #333;
   margin-bottom: 10px;
+  text-align: center; /* Center the text */
 }
 
+/* Flex container for the categories */
 .category-container {
   display: flex;
-  overflow-x: auto;
-  padding: 10px 0;
   gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the categories horizontally */
+  padding: 10px 0;
 }
 
 .category {
@@ -217,6 +223,7 @@ ul {
   cursor: pointer;
   min-width: 150px;
   transition: background-color 0.3s, box-shadow 0.3s;
+  text-align: center; /* Center the category content */
 }
 
 .category:hover {
@@ -243,12 +250,6 @@ ul {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.top-search-section h5 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 15px;
 }
 
 .top-search-item {
@@ -289,25 +290,13 @@ ul {
 
 .top-search-dates {
   display: flex;
-  flex-direction: row;
-  gap: 592px; 
+  flex-direction: column; /* Stack dates vertically */
 }
-
-
 
 .date-column {
   font-size: 1rem;
   color: #666;
-  display: flex;
-  flex-direction: column;
 }
-
-.date-column.returned-date {
-  display: flex;
-  flex-direction: row;
-  gap: 592px; 
-}
-
 
 /* Status Section */
 .status-section {
@@ -354,5 +343,16 @@ ul {
 
 .barcode svg {
   height: 50px; /* Adjust height of barcode */
+}
+.top-search-section {
+  margin-bottom: 20px; /* Keep the existing margin for spacing within the section */
+  padding-bottom: 50px; /* Add padding at the bottom to create space */
+}
+
+/* Optional: Ensure the padding is responsive by using a media query */
+@media (max-width: 768px) {
+  .top-search-section {
+    padding-bottom: 30px; /* Adjust for smaller screens */
+  }
 }
 </style>

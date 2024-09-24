@@ -28,15 +28,14 @@ export default {
     Header,
   },
   props: {
-  item: {
-    type: Object,
-    default: () => ({})
-  }
-},
-created() {
-  console.log('Received item prop:', this.item);
-},
-
+    item: {
+      type: Object,
+      default: () => ({})
+    }
+  },
+  created() {
+    console.log('Received item prop:', this.item);
+  },
   methods: {
     bookNow() {
       this.$router.push('/reservations');
@@ -48,16 +47,13 @@ created() {
 };
 </script>
 
-
-
-
 <style scoped>
 .booked-item {
   padding: 20px;
   background-color: #f4f4f9;
   border-radius: 8px;
   max-width: 800px;
-  margin: 100px auto 0; /* Adjust margin-top to account for fixed header */
+  margin: 120px auto 0; /* Margin to create space for the fixed header */
   position: relative;
 }
 
@@ -69,6 +65,7 @@ created() {
   width: 100%;
   height: auto;
   border-radius: 8px;
+  margin-top: 20px; /* Added margin-top for spacing */
 }
 
 .centered-info {
@@ -102,31 +99,39 @@ created() {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 20px; /* Added margin to create space above the buttons */
+  margin-bottom: 40px; /* Added margin to create space below the buttons */
 }
 
 .actions button {
-  padding: 10px 20px;
+  padding: 12px 24px; /* Increased padding for better clickability */
   border: none;
   border-radius: 4px;
   color: white;
   cursor: pointer;
+  font-size: 1rem; /* Increased font size for readability */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Added shadow for depth */
+  transition: background-color 0.3s, transform 0.2s; /* Added transition for hover effect */
 }
 
 .actions .book-now {
-  background-color: #28a745;
+  background-color: #28a745; /* Green color for 'Book Now' */
 }
 
 .actions .book-now:hover {
-  background-color: #218838;
+  background-color: #218838; /* Darker green on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 .actions .chat {
-  background-color: #007bff;
+  background-color: #007bff; /* Blue color for 'Chat Now' */
 }
 
 .actions .chat:hover {
-  background-color: #0056b3;
+  background-color: #0056b3; /* Darker blue on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
 }
+
 .header {
   width: 100%;
   padding: 10px 20px;

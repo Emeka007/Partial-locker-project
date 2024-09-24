@@ -204,6 +204,7 @@ export default {
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 60px;
 }
 
 .top-search-section h5 {
@@ -263,4 +264,16 @@ export default {
 .book-now-btn:hover {
   background-color: #c00e3c;
 }
+.top-search-section {
+  margin-bottom: 20px; /* Keep the existing margin for spacing within the section */
+  padding-bottom: 50px; /* Add padding at the bottom to create space */
+}
+
+/* Optional: Ensure the padding is responsive by using a media query */
+@media (max-width: 768px) {
+  .top-search-section {
+    padding-bottom: 30px; /* Adjust for smaller screens */
+  }
+}
+
 </style>
