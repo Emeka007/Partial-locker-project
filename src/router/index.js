@@ -10,6 +10,7 @@ import AdminDashboard from '../views/AdminDashboard.vue';
 import UploadItem from '@/components/UploadItem.vue';
 import UploadPop from '@/components/UploadPop.vue';
 import ScheduledItems from '@/components/ScheduledItems.vue';
+import LoanStatus from '@/components/LoanStatus.vue';
 
 const routes = [
   { path: '/', name: 'StudentLogin', component: StudentLogin },
@@ -22,6 +23,11 @@ const routes = [
     path: '/booked-item/:id',
     name: 'BookedItem',
     component: BookedItem
+  },
+  {
+    path: '/loan-status',
+    name: 'LoanStatus',
+    component: LoanStatus,
   },
   
   { path: '/quickactions',    name: 'QuickActions',    component: QuickActions  },

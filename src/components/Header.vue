@@ -21,8 +21,8 @@
         <span>Chat</span>
       </router-link>
       <router-link to="/quickactions" class="mobile-nav-link">
-        <i class="fas fa-bolt"></i>
-        <span>Quick Actions</span>
+        <i class="fas fa-cog"></i>
+        <span>Settings</span>
       </router-link>
     </nav>
 

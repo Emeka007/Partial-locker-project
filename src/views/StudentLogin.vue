@@ -15,8 +15,11 @@
         <button type="submit" class="login-button">Login</button>
       </form>
       <div class="login-footer">
-        
-        <p><router-link to="/forgot-password">Forgot Password?</router-link></p>
+        <p>
+          <router-link to="/forgot-password">Forgot Password?</router-link>
+          |
+          <router-link to="/register">No account? Register</router-link>
+        </p>
       </div>
     </div>
   </div>

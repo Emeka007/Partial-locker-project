@@ -7,11 +7,8 @@
       <section class="photo-section">
         <img :src="profile.photoUrl" alt="Profile Photo" class="profile-photo" />
         <div class="profile-info">
-          <input v-if="isEditing" v-model="profile.fullName" class="input-edit" />
-          <h1 v-else>{{ profile.fullName }}</h1>
-
-          <input v-if="isEditing" v-model="profile.program" class="input-edit" />
-          <p v-else class="profile-program">{{ profile.program }}</p>
+          <h1>{{ profile.fullName }}</h1>
+          <p class="profile-program">{{ profile.program }}</p>
         </div>
       </section>
 
@@ -21,17 +18,11 @@
         <dl>
           <div class="info-row">
             <dt>Student ID</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.studentId" class="input-edit" />
-              <span v-else>{{ profile.studentId }}</span>
-            </dd>
+            <dd>{{ profile.studentId }}</dd>
           </div>
           <div class="info-row">
             <dt>Study Period</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.studyPeriod" class="input-edit" />
-              <span v-else>{{ profile.studyPeriod }}</span>
-            </dd>
+            <dd>{{ profile.studyPeriod }}</dd>
           </div>
         </dl>
       </section>
@@ -42,31 +33,19 @@
         <dl>
           <div class="info-row">
             <dt>Attendance</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.attendance" class="input-edit" />
-              <span v-else>{{ profile.attendance }}</span>
-            </dd>
+            <dd>{{ profile.attendance }}</dd>
           </div>
           <div class="info-row">
             <dt>PSP</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.psp" class="input-edit" />
-              <span v-else>{{ profile.psp }}</span>
-            </dd>
+            <dd>{{ profile.psp }}</dd>
           </div>
           <div class="info-row">
             <dt>Completed Studies</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.completedStudies" class="input-edit" />
-              <span v-else>{{ profile.completedStudies }}</span>
-            </dd>
+            <dd>{{ profile.completedStudies }}</dd>
           </div>
           <div class="info-row">
             <dt>Student Exchange</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.studentExchange" class="input-edit" />
-              <span v-else>{{ profile.studentExchange }}</span>
-            </dd>
+            <dd>{{ profile.studentExchange }}</dd>
           </div>
         </dl>
       </section>
@@ -77,51 +56,67 @@
         <dl>
           <div class="info-row">
             <dt>Date of Birth</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.dateOfBirth" class="input-edit" />
-              <span v-else>{{ profile.dateOfBirth }}</span>
-            </dd>
+            <dd>{{ profile.dateOfBirth }}</dd>
           </div>
           <div class="info-row">
             <dt>Nationality</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.nationality" class="input-edit" />
-              <span v-else>{{ profile.nationality }}</span>
-            </dd>
+            <dd>{{ profile.nationality }}</dd>
           </div>
           <div class="info-row">
             <dt>Gender</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.gender" class="input-edit" />
-              <span v-else>{{ profile.gender }}</span>
-            </dd>
+            <dd>{{ profile.gender }}</dd>
           </div>
         </dl>
       </section>
 
       <!-- Contact Information Section -->
       <section class="card">
-        <h2>Contact Information</h2>
+        <div class="contact-header">
+          <h2>Contact Information</h2>
+          <!-- Edit/Save Button next to heading -->
+          <button v-if="isEditing" @click="saveProfile" class="edit-button">Save</button>
+          <button v-else @click="toggleEdit" class="edit-button">
+            <i class="fas fa-edit"></i> Edit contact information
+          </button>
+        </div>
         <dl>
           <div class="info-row">
-            <dt>Email</dt>
+           <dt>Email <span class="email-label-note">(given by school)</span></dt>
+           <dd>{{ profile.email }}</dd> 
+         </div>
+          <div class="info-row">
+            <dt>Other Email </dt>
             <dd>
               <input v-if="isEditing" v-model="profile.email" class="input-edit" />
               <span v-else>{{ profile.email }}</span>
             </dd>
           </div>
           <div class="info-row">
-            <dt>Phone Number</dt>
+            <dt>Telephone</dt>
             <dd>
               <input v-if="isEditing" v-model="profile.phoneNumber" class="input-edit" />
               <span v-else>{{ profile.phoneNumber }}</span>
             </dd>
           </div>
           <div class="info-row">
-            <dt>Address</dt>
+            <dt>Street Address</dt>
             <dd>
-              <input v-if="isEditing" v-model="profile.address" class="input-edit" />
-              <span v-else>{{ profile.address }}</span>
+              <input v-if="isEditing" v-model="profile.streetAddress" class="input-edit" />
+              <span v-else>{{ profile.streetAddress }}</span>
+            </dd>
+          </div>
+          <div class="info-row">
+            <dt>Postal Code</dt>
+            <dd>
+              <input v-if="isEditing" v-model="profile.postalCode" class="input-edit" />
+              <span v-else>{{ profile.postalCode }}</span>
+            </dd>
+          </div>
+          <div class="info-row">
+            <dt>City</dt>
+            <dd>
+              <input v-if="isEditing" v-model="profile.city" class="input-edit" />
+              <span v-else>{{ profile.city }}</span>
             </dd>
           </div>
         </dl>
@@ -133,10 +128,7 @@
         <dl>
           <div class="info-row">
             <dt>Language of School Education</dt>
-            <dd>
-              <input v-if="isEditing" v-model="profile.schoolLanguage" class="input-edit" />
-              <span v-else>{{ profile.schoolLanguage }}</span>
-            </dd>
+            <dd>{{ profile.schoolLanguage }}</dd>
           </div>
         </dl>
       </section>
@@ -168,30 +160,30 @@ export default {
         nationality: 'China',
         gender: 'Male',
         email: 'john.doe@centria.fi',
+        otheremail: 'john_doe@yahoo.com',
         phoneNumber: '+358434567890',
-        address: 'Vidnasinkatu 2, Kokkola, Finland',
+        streetAddress: 'Vidnasinkatu 2,',
+        postalCode: '67100',
+        city: 'Kokkola',
         schoolLanguage: 'Other',
         photoUrl: johnPhoto,
       },
     };
   },
-  created() {
-    // Check if the URL contains ?edit=true and enable editing if true
-    if (this.$route.query.edit === 'true') {
-      this.isEditing = true;
-    }
-  },
   methods: {
-    // Method to save the profile
+    // Method to toggle edit mode for Contact Information
+    toggleEdit() {
+      this.isEditing = !this.isEditing;
+    },
+    // Method to save the profile (only for contact information)
     saveProfile() {
-      console.log('Profile data saved:', this.profile);
+      console.log('Profile contact information saved:', this.profile);
       this.isEditing = false; // Exit edit mode after saving
       // Typically, send the updated profile data to a server here
     },
   },
 };
 </script>
-
 
 <style scoped>
 /* Main layout */
@@ -214,36 +206,45 @@ export default {
   margin-top: 30px;
   box-sizing: border-box;
 }
+
 .profile-container section:last-of-type {
-  margin-bottom: 80px; 
+  margin-bottom: 80px;
+}
+
+/* Contact Information Header */
+.contact-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Edit/Save Button */
-.edit-save-button {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 20px;
-}
-
 .edit-button {
-  background-color: #007bff;
-  color: white;
+  background-color: white;
+  color: black;
   padding: 10px 20px;
-  border: none;
+  border: 1px solid grey;
   border-radius: 5px;
   cursor: pointer;
   font-size: 16px;
+  display: flex;
+  align-items: center; /* Aligns icon and text vertically */
+}
+
+.edit-button i {
+  margin-right: 8px; /* Adds space between the icon and text */
+  font-size: 18px; /* Adjust the icon size */
 }
 
 .edit-button:hover {
-  background-color: #0056b3;
+  background-color: #f0f0f0;
 }
 
 /* Photo Section */
 .photo-section {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center the image and text */
+  align-items: center;
   background-color: white;
   padding: 20px;
   border-radius: 12px;
@@ -261,7 +262,7 @@ export default {
 }
 
 .profile-info {
-  text-align: center; /* Center-align the name and program */
+  text-align: center;
 }
 
 h1 {
@@ -276,7 +277,6 @@ h1 {
   color: #555;
   margin-top: 5px;
 }
-
 
 /* Input field styling */
 .input-edit {
@@ -323,6 +323,11 @@ dd {
   font-size: 16px;
 }
 
+.email-label-note {
+  color: grey;
+  font-style: italic;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .info-row {
@@ -341,8 +346,5 @@ dd {
   h2 {
     font-size: 18px;
   }
-  
-
-
 }
 </style>

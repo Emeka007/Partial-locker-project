@@ -21,6 +21,7 @@ import BookedItem from '@/components/BookedItem.vue';
 import ReturnedItem from '@/views/ReturnedItem.vue';
 import UploadItem from '@/components/UploadItem.vue';
 import UploadPop from '@/components/UploadPop.vue';
+import LoanStatus from '@/components/LoanStatus.vue';
 import ScheduledItems from '@/components/ScheduledItems.vue';
 import PendingItems from '@/components/PendingItems.vue';
 import AdminSettings from '@/components/AdminSettings.vue';
@@ -54,6 +55,14 @@ const routes = [
     props: true
   },
   {
+    path: '/register',
+    component: () => import('./components/StudentRegister.vue'),
+  },
+  {
+    path: '/forgot-password',
+    component: () => import('./components/ForgotPassword.vue'),
+  },
+  {
     path: '/admin-open-chat/:contactId',
     name: 'AdminOpenChat',
     component: () => import('@/components/AdminOpenChat.vue'),  // Ensure that the path to the component is correct
@@ -81,6 +90,11 @@ const routes = [
     path: '/pending-items',
     name: 'PendingItems',
     component: PendingItems
+  },
+  {
+    path: '/loan-status',
+    name: 'LoanStatus',
+    component: LoanStatus,
   },
   
   {

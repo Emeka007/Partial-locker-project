@@ -102,12 +102,18 @@ export default {
     this.selectedCategory = categoryName;
   },
   goToReservations(item) {
-    const itemString = JSON.stringify(item);
-    console.log('Navigating with item:', itemString);
-    this.$router.push({ 
-      name: 'BookedItem', 
-      params: { item: itemString }
-    });
+    if (item.title === 'Syringe Pack') {
+      // Navigate to the LoanStatus route
+      this.$router.push({ name: 'LoanStatus' });
+    } else {
+      // Handle other items normally
+      const itemString = JSON.stringify(item);
+      console.log('Navigating with item:', itemString);
+      this.$router.push({
+        name: 'BookedItem',
+        params: { item: itemString },
+      });
+    }
   },
 }
 
