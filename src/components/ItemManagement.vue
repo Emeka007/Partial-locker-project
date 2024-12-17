@@ -18,7 +18,13 @@
       <!-- Header Section -->
       <div class="header">
         
+  <div>
+    <button class="create-new-button" @click="goToFormPage">Create New</button>
+  </div>
+
+
         <div class="header-right">
+
           <input type="text" class="search-bar" placeholder="Search..." v-model="searchQuery">
           <img :src="require('@/assets/admin.png')" alt="Admin" class="admin-image">
 
@@ -28,7 +34,10 @@
       <!-- Summary Cards Section -->
       <div class="summary-section">
         <div class="summary-cards">
-          <div class="card highlighted" @click="handleCardClick('loaded')">
+          <div class="card highlighted" @click="handleCardClick('all')">
+            <h3>All Items</h3>
+          </div>
+          <div class="card" @click="handleCardClick('loaded')">
             <h3>Loaded Items</h3>
           </div>
           <div class="card" @click="handleCardClick('scheduled')">
@@ -145,6 +154,9 @@ export default {
 
       // Navigate to the appropriate route
       switch (cardType) {
+        case 'all':
+          this.$router.push({ name: 'AllItems' });
+          break;
         case 'scheduled':
           this.$router.push({ name: 'ScheduledItems' });
           break;
@@ -161,7 +173,7 @@ export default {
           this.$router.push({ name: 'MissingItems' });
           break;
         default:
-          this.$router.push({ name: 'ItemManagement' });
+          this.$router.push({ name: 'AllItems' });
       }
     },
     handleAddNew() {
@@ -170,11 +182,40 @@ export default {
     sortItems() {
       console.log(`Sort by: ${this.sortBy}`);
     },
+    goToFormPage() {
+      this.$router.push('/form');
+    }
   },
+  // created() {
+  //   this.handleCardClick('all');  // Ensures the "All Items" view is shown when the component is created.
+  // },
 };
 </script>
 
 <style scoped>
+.create-new-button {
+  background-color: #4CAF50; /* Green background */
+  color: white; /* White text */
+  border: none; /* No border */
+  padding: 10px 20px; /* Padding for the button */
+  text-align: center; /* Center text */
+  text-decoration: none; /* No underline */
+  display: inline-block; /* Inline block for proper spacing */
+  font-size: 16px; /* Font size */
+  margin: 4px 2px; /* Margin around the button */
+  cursor: pointer; /* Pointer cursor on hover */
+  border-radius: 5px; /* Rounded corners */
+  transition: background-color 0.3s, transform 0.2s; /* Transition effects */
+}
+
+.create-new-button:hover {
+  background-color: #45a049; /* Darker green on hover */
+  transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.create-new-button:active {
+  transform: scale(0.95); /* Slightly shrink when clicked */
+}
 .item-management-page {
   display: flex;
   font-family: Arial, sans-serif;

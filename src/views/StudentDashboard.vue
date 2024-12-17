@@ -1,16 +1,14 @@
 <template>
   <div class="dashboard">
-    <Header />
+    <Header /> <!-- The Header component with the search bar -->
 
     <main class="main-content">
       <div class="welcome-section">
         <h1>Welcome, {{ studentName }}!</h1>
-        <p>Student ID: {{ studentId }}</p>
       </div>
 
       <!-- Category Section -->
       <div class="categories">
-        <h5>Category</h5>
         <div class="category-container">
           <div
             class="category"
@@ -26,36 +24,22 @@
 
       <!-- Top Search Section -->
       <div class="top-search-section">
-        <h5>Top Search</h5>
-        <div 
-          class="top-search-item" 
-          v-for="item in filteredTopSearchItems" 
-          :key="item.title"
-        >
-          <img 
-            :src="require(`@/assets/${item.imageSrc}`)" 
-            :alt="item.title" 
-            class="top-search-image" 
-          />
+        <div class="top-search-item" v-for="item in filteredTopSearchItems" :key="item.id">
+          <img :src="require(`@/assets/${item.imageSrc}`)" :alt="item.title" class="top-search-image" />
           <div class="top-search-content">
             <h3>{{ item.title }}</h3>
             <p>From: {{ item.from }}</p>
             <p>Note: {{ item.note }}</p>
           </div>
-          <button 
-            class="book-now-btn" 
-            @click="goToReservations(item)"
-          >
-            Book Now
-          </button>
+          <button class="book-now-btn" @click="goToReservations(item)">Book Now</button>
         </div>
       </div>
-      
     </main>
   </div>
 </template>
 
 <script>
+import axios from 'axios';
 import Header from '@/components/Header.vue';
 
 export default {
@@ -66,29 +50,15 @@ export default {
     return {
       studentName: 'John Doe',
       studentId: '123456',
-      selectedCategory: null,
+      selectedCategory: null, // Track the selected category
       categories: [
         { name: 'Technology', icon: 'memory' },
         { name: 'Nursing', icon: 'medical_services' },
-        { name: 'Business', icon: 'business_center' },
+        { name: 'Sports', icon: 'business_center' },
         { name: 'Engineering', icon: 'engineering' },
         { name: 'Chemistry', icon: 'science' },
       ],
-      topSearchItems: [
-        { title: 'Raspberry Pi', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Technology', imageSrc: 'Raspberry_Pi_B+_illustration.svg.png' },
-        { title: 'Syringe Pack', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Nursing', imageSrc: 'Syringe-Pack.png' },
-        { title: 'Defibrillator', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Nursing', imageSrc: 'Defibrillator.jpg' },
-        { title: 'Chemistry Lab Kit', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Chemistry', imageSrc: 'chemlabkit.jpg' },
-        { title: 'SAP TOOL', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Business', imageSrc: 'sap.png' },
-        { title: 'Cable Tester', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Technology', imageSrc: 'Cable-Tester.png' },
-        { title: 'Nursing Simulation Manikin', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Nursing', imageSrc: 'Nursing Simulation Manikin.png' },
-        { title: 'Blood Pressure Monitor', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Nursing', imageSrc: 'Blood-Pressure-Monitor.png' },
-        { title: 'Engineering Tools', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Engineering', imageSrc: 'enginner.jpeg' },
-        { title: 'Financial Management', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Business', imageSrc: 'Finance.jpeg' },
-        { title: 'Arduino Uno Kit', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Technology', imageSrc: 'Arduino-Uno-Kit.png' },
-        { title: 'Network Switch', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Technology', imageSrc: 'Network-Switch.png' },
-        { title: 'Stethoscope', from: 'Chukwuemeka Obanya', note: 'I’ll be letting this out ...', category: 'Nursing', imageSrc: 'Stethoscope.jpeg' }
-      ],
+      topSearchItems: [], // Initially empty, to be filled with API data
     };
   },
   computed: {
@@ -98,22 +68,77 @@ export default {
     },
   },
   methods: {
-  filterByCategory(categoryName) {
-    this.selectedCategory = categoryName;
+    filterByCategory(categoryName) {
+      this.selectedCategory = categoryName;
+    },
+    goToReservations(item) {
+      console.log(item.title)
+      if (item.title == 'syringe') {
+        console.log('inside')
+      // Navigate to the LoanStatus route
+      this.$router.push({ name: 'LoanStatus' });
+      return;
+    } 
+      this.$router.push({
+        name: 'ReservationPage', // Assuming you create a route named 'ReservationPage'
+        params: { 
+          itemId: item.id, 
+        },
+        query: { 
+      itemName: item.title,
+      itemImage: item.imageSrc,
+      itemDescription: item.note,
+    },
+      });
+    },
+    fetchTopSearchItems() {
+      axios
+        .get('https://localhost:7075/api/Equipments')
+        .then(response => {
+          // Transform the API response to match your topSearchItems structure
+          this.topSearchItems = response.data.map(item => ({
+            id: item.id,  // Ensure the id is included in the response
+            title: item.name,
+            from: item.createdBy,
+            note: item.description,
+            category: this.mapDepartmentToCategory(item.department),
+            imageSrc: this.getImageSource(item.name),
+            reservable: item.reservable
+          }));
+        })
+        .catch(error => {
+          console.error('Error fetching top search items:', error);
+        });
+    },
+    mounted() {
+      this.fetchTopSearchItems();
+    },
+    mapDepartmentToCategory(department) {
+      // Map department to category names used in your UI
+      const departmentCategoryMap = {
+        IT: 'Technology',
+        nursing: 'Nursing',
+        sports: 'Sports',
+        Engineering: 'Engineering',
+        Chemistry: 'Chemistry',
+      };
+      return departmentCategoryMap[department] || 'Other';
+    },
+    getImageSource(itemName) {
+      // Map item names to image sources
+      const imageMap = {
+        'desktop computer': 'desktop computer.png',
+        'stethoscope': 'stethescope.png',
+        // Add more mappings as needed
+      };
+      return imageMap[itemName] || 'NOIMAGE.png';
+    },
   },
-  goToReservations(item) {
-    const itemString = JSON.stringify(item);
-    console.log('Navigating with item:', itemString);
-    this.$router.push({ 
-      name: 'BookedItem', 
-      params: { item: itemString }
-    });
+  created() {
+    this.fetchTopSearchItems(); // Fetch data when the component is created
   },
-}
-
 };
 </script>
-
 
 <style scoped>
 .dashboard {
@@ -121,10 +146,6 @@ export default {
   flex-direction: column;
   width: 100%;
   background-color: #f4f4f9;
-}
-
-.header {
-  width: 100%;
 }
 
 .main-content {
@@ -135,7 +156,7 @@ export default {
 
 .welcome-section {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 10px;
 }
 
 .welcome-section h1 {
@@ -143,22 +164,10 @@ export default {
   color: #333;
 }
 
-.welcome-section p {
-  font-size: 1.2rem;
-  color: #666;
-}
-
-/* Category Section */
 .categories {
   padding: 20px;
   background-color: #f4f4f9;
   border-radius: 8px;
-}
-
-.categories h5 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 10px;
 }
 
 .category-container {
@@ -171,7 +180,7 @@ export default {
 .category {
   display: flex;
   align-items: center;
-  padding: 10px 15px;
+  padding: 10px 25px;
   background-color: #ffffff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -197,19 +206,12 @@ export default {
   font-weight: 500;
 }
 
-/* Top Search Section */
 .top-search-section {
-  margin-top: 30px;
-  padding: 20px;
+  margin-top: 5px;
+  padding: 10px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.top-search-section h5 {
-  font-size: 1.2rem;
-  color: #333;
-  margin-bottom: 15px;
 }
 
 .top-search-item {
@@ -226,7 +228,7 @@ export default {
 }
 
 .top-search-image {
-  width: 120px; /* Increased size */
+  width: 120px;
   height: auto;
   margin-right: 20px;
 }

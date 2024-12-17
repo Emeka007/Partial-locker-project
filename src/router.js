@@ -24,6 +24,11 @@ import ScheduledItems from '@/components/ScheduledItems.vue';
 import PendingItems from '@/components/PendingItems.vue';
 import AdminSettings from '@/components/AdminSettings.vue';
 import MissingItems from '@/components/MissingItems.vue';
+import FormPage from '@/components/FormPage.vue';
+import AllItems from './components/AllItems.vue';
+import ReservationPage from './components/ReservationPage.vue';
+import LoanStatus from './components/LoanStatus.vue';
+
 
 const routes = [
   { path: '/', name: 'StudentLogin', component: StudentLogin },
@@ -36,6 +41,7 @@ const routes = [
   { path: '/studentchat', name: 'StudentChat', component: StudentChat },
   { path: '/item-management', name: 'ItemManagement', component: ItemManagement },
   { path: '/borrow-requests', name: 'BorrowRequests', component: BorrowRequests },
+  { path: '/all-items', name: 'AllItems', component: AllItems },
   { path: '/loading-list', name: 'LoadingList', component: LoadingList },
   { path: '/reserved-items', name: 'ReservedItems', component: ReservedItems },
   { path: '/returned-list', name: 'ReturnedList', component: ReturnedList },
@@ -45,6 +51,19 @@ const routes = [
   { path: '/upload-item', name: 'UploadItem', component: UploadItem },
   { path: '/upload-pop',    name: 'UploadPop',    component: UploadPop,  },
   { path: '/admin-settings', name: 'AdminSettings', component: AdminSettings,},
+  { path: '/form', name: 'FormPage', component: FormPage },
+  { path: '/loan-status', name: 'LoanStatus', component: LoanStatus, },
+  {
+    path: '/create/:id?',
+    name: 'create',
+    component: FormPage,
+  },
+  {
+    path: '/reservation/:itemId',
+    name: 'ReservationPage',
+    component: ReservationPage,
+    props: true,
+  },
   {
     path: '/student-open-chats/:contactId',
     name: 'StudentOpenChats',

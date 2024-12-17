@@ -21,7 +21,7 @@
         <input
           type="text"
           v-model="searchQuery"
-          placeholder="Search requests..."
+          placeholder="Search reservations..."
           class="search-bar"
         />
         <div class="admin-image">
@@ -30,36 +30,45 @@
       </div>
 
       <div class="borrow-requests">
-        <!-- Borrow Requests List -->
+        <!-- Reservations List -->
         <div class="requests-list">
-          <h2>Pending Borrow Requests</h2>
+          <h2>Borrow Requests</h2>
           <table>
             <thead>
               <tr>
-                <th>Student Name</th>
+                <th>Reservation ID</th>
                 <th>Item Name</th>
-                <th>Requested Date</th>
+                <th>From Date</th>
+                <th>To Date</th>
                 <th>Status</th>
+                <th>Requested By</th>
+                <th>Note</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr
-                v-for="request in filteredRequests"
-                :key="request.id"
+                v-for="reservation in filteredReservations"
+                :key="reservation.id"
               >
-                <td>{{ request.studentName }}</td>
-                <td>{{ request.itemName }}</td>
-                <td>{{ request.requestedDate }}</td>
-                <td>{{ request.status }}</td>
+                <td>{{ reservation.id }}</td>
+                <td>{{ reservation.equipmentName }}</td>
+                <td>{{ reservation.fromDate }}</td>
+                <td>{{ reservation.toDate }}</td>
+                <td><b>{{ reservation.status }}</b></td>
+                <td>{{ reservation.userName }}</td>
+                <td>{{ reservation.note }}</td>
                 <td>
-                  <button @click="approveRequest(request.id)">
-                    Approve
+                  <!-- Approve Button -->
+                  <button @click="approveRequest(reservation.id)">
+                    <i class="fas fa-check"></i> 
                   </button>
-                  <button @click="rejectRequest(request.id)">
-                    Reject
+                  <!-- Reject Button -->
+                  <button @click="rejectRequest(reservation.id)">
+                    <i class="fas fa-times"></i> 
                   </button>
-                  <button @click="viewRequestDetails(request.id)">
+                  <!-- View Details Button -->
+                  <button @click="viewRequestDetails(reservation.id)">
                     View Details
                   </button>
                 </td>
@@ -68,14 +77,16 @@
           </table>
         </div>
 
-        <!-- Student and Item Details Modal -->
-        <div v-if="selectedRequest" class="details-modal">
+        <!-- Reservation Details Modal -->
+        <div v-if="selectedReservation" class="details-modal">
           <div class="modal-content">
-            <h2>Request Details</h2>
-            <p><strong>Student Name:</strong> {{ selectedRequest.studentName }}</p>
-            <p><strong>Item Name:</strong> {{ selectedRequest.itemName }}</p>
-            <p><strong>Requested Date:</strong> {{ selectedRequest.requestedDate }}</p>
-            <p><strong>Status:</strong> {{ selectedRequest.status }}</p>
+            <h2>Reservation Details</h2>
+            <p><strong>Reservation ID:</strong> {{ selectedReservation.id }}</p>
+            <p><strong>From Date:</strong> {{ selectedReservation.fromDate }}</p>
+            <p><strong>To Date:</strong> {{ selectedReservation.toDate }}</p>
+            <p><strong>Status:</strong> {{ selectedReservation.status }}</p>
+            <p><strong>Status Description:</strong> {{ selectedReservation.statusDescription }}</p>
+            <p><strong>Note:</strong> {{ selectedReservation.note }}</p>
             <button @click="closeDetailsModal" class="close-button">Close</button>
           </div>
         </div>
@@ -85,67 +96,119 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
-  name: 'BorrowRequests',
+  name: 'ReservationList',
   data() {
     return {
       searchQuery: '',
-      pendingRequests: [
-        { id: 1, studentName: 'John Doe', itemName: 'Defibrillator', requestedDate: '2024-06-20', status: 'PENDING' },
-        { id: 2, studentName: 'Anthony Kipkemboi', itemName: 'Chemistry Lab Kit', requestedDate: '2024-06-22', status: 'PENDING' },
-        { id: 3, studentName: 'Alice Johnson', itemName: 'Nursing Simulation Manikin', requestedDate: '2024-07-10', status: 'PENDING' },
-        { id: 4, studentName: 'Angela Yogi', itemName: 'Syringe Pack', requestedDate: '2024-07-15', status: 'PENDING' },
-        { id: 5, studentName: 'Saurav Amatya', itemName: 'Raspberry Pi', requestedDate: '2024-07-25', status: 'PENDING' },
-        { id: 6, studentName: 'Ojeabulu Jude', itemName: 'Stethoscope', requestedDate: '2024-08-05', status: 'PENDING' },
-        { id: 7, studentName: 'Majeed Babs', itemName: 'Network Switcher', requestedDate: '2024-08-10', status: 'PENDING' },
-        { id: 8, studentName: 'Callistus Obara', itemName: 'Cable Tester', requestedDate: '2024-08-20', status: 'PENDING' },
-        { id: 9, studentName: 'Joy Okonji', itemName: 'SAP Workbook', requestedDate: '2024-08-21', status: 'PENDING' },
-        { id: 10, studentName: 'Cliff Akinde', itemName: 'Financial Workbook', requestedDate: '2024-08-25', status: 'PENDING' },
-      ],
-      selectedRequest: null,
+      selectedReservation: null,
+      reservations: [], // Initialize empty array for reservations
     };
   },
   computed: {
-    filteredRequests() {
-      return this.pendingRequests.filter((request) =>
-        request.studentName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-        request.itemName.toLowerCase().includes(this.searchQuery.toLowerCase())
+    filteredReservations() {
+      return this.reservations.filter((reservation) =>
+        reservation.id.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        reservation.status.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+        reservation.note.toLowerCase().includes(this.searchQuery.toLowerCase())
       );
     },
   },
   methods: {
-    approveRequest(requestId) {
-      const request = this.pendingRequests.find((req) => req.id === requestId);
-      if (request) {
-        request.status = 'APPROVED';
-        alert(`Request for ${request.itemName} by ${request.studentName} has been approved.`);
-        this.notifyStudent(request, 'approved');
+
+    async approveRequest(requestId) {
+  try {
+    // Fetch the reservation data from the backend
+    const response = await axios.get(`https://localhost:7075/api/Reservations/${requestId}`);
+    const request = response.data;
+
+    // Update the status to 'APPROVED'
+    request.status = 'APPROVED';
+
+    // Send the updated reservation data with a PUT request
+    const updateResponse = await axios.put(`https://localhost:7075/api/Reservations/${request.id}`, request);
+
+    if (updateResponse.status === 204) {
+      // Successfully updated
+      alert(`Request for ${response.name} has been approved.`);
+    }
+    
+    // Optionally, notify the student that their request was approved
+    this.notifyStudent(request, 'approved');
+    
+  } catch (error) {
+    console.error('Error approving request:', error);
+    //alert('There was an error updating the request.');
+  }
+},
+async rejectRequest(requestId) {
+  try {
+    // Fetch the reservation data from the backend
+    const response = await axios.get(`https://localhost:7075/api/Reservations/${requestId}`);
+    const request = response.data;
+
+    // Update the status to 'REJECTED'
+    request.status = 'REJECTED';
+
+    // Send the updated reservation data with a PUT request
+    const updateResponse = await axios.put(`https://localhost:7075/api/Reservations/${request.id}`, request);
+
+    if (updateResponse.status === 204) {
+      // Successfully updated
+      alert(`Request for ${request.equipmentName} by ${request.userName} has been rejected.`);
+    }
+
+    // Optionally, notify the student that their request was rejected
+    this.notifyStudent(request, 'rejected');
+    
+  } catch (error) {
+    console.error('Error rejecting request:', error);
+    alert('There was an error updating the request.');
+  }
+},
+    async fetchReservations() {
+      try {
+        // Fetch reservations from your .NET API
+        const response = await axios.get('https://localhost:7075/api/Reservations?status=pending');
+        
+        // Fetch the data from API and enhance it with equipment details
+        this.reservations = await Promise.all(response.data.map(async (reservation) => {
+          // Fetch equipment details based on equipmentId for each reservation
+          const equipmentResponse = await axios.get(`https://localhost:7075/api/Equipments/${reservation.equipmentId}`);
+          reservation.equipmentName = equipmentResponse.data.name;
+          reservation.equipmentDescription = equipmentResponse.data.description;
+
+          // Fetch user details based on userId for each reservation
+          const userResponse = await axios.get(`https://localhost:7075/api/Users/${reservation.userId}`);
+          reservation.userName = userResponse.data.name;
+          return reservation;
+        }));
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
       }
     },
-    rejectRequest(requestId) {
-      const request = this.pendingRequests.find((req) => req.id === requestId);
-      if (request) {
-        request.status = 'REJECTED';
-        alert(`Request for ${request.itemName} by ${request.studentName} has been rejected.`);
-        this.notifyStudent(request, 'rejected');
-      }
-    },
-    viewRequestDetails(requestId) {
-      this.selectedRequest = this.pendingRequests.find((req) => req.id === requestId);
+    viewReservationDetails(reservationId) {
+      this.selectedReservation = this.reservations.find((reservation) => reservation.id === reservationId);
     },
     closeDetailsModal() {
-      this.selectedRequest = null;
-    },
-    notifyStudent(request, decision) {
-      console.log(`Student ${request.studentName} has been notified that their request for ${request.itemName} was ${decision}.`);
+      this.selectedReservation = null;
     },
     handleLogout() {
       // Implement your logout logic here
       console.log("User logged out");
     },
   },
+  mounted() {
+    // Fetch reservation data when the component is mounted
+    this.fetchReservations();
+  },
 };
 </script>
+
+
+
 
 <style scoped>
 .main-container {
@@ -247,36 +310,61 @@ button {
 button:hover {
   background-color: #0056b3;
 }
+
 .details-modal {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  right: 0;
+  bottom: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
-  background-color: white;
+  background-color: #fff;
   padding: 20px;
   border-radius: 5px;
   width: 400px;
-  max-width: 100%;
 }
 
 .close-button {
-  padding: 8px 16px;
-  background-color: #d9534f;
+  background-color: #dc3545;
   color: white;
   border: none;
+  padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
 }
 
 .close-button:hover {
-  background-color: #c9302c;
+  background-color: #c82333;
+}button {
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.approve-btn {
+  background-color: #28a745 !important; /* Green */
+  color: white;
+}
+
+.reject-btn {
+  background-color: #dc3545 !important; /* Red */
+  color: white;
+}
+
+.details-btn {
+  background-color: #007bff !important; /* Blue */
+  color: white;
 }
 </style>

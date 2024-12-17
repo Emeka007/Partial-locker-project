@@ -10,6 +10,7 @@ import AdminDashboard from '../views/AdminDashboard.vue';
 import UploadItem from '@/components/UploadItem.vue';
 import UploadPop from '@/components/UploadPop.vue';
 import ScheduledItems from '@/components/ScheduledItems.vue';
+import FormPage from '@/components/FormPage.vue';
 
 const routes = [
   { path: '/', name: 'StudentLogin', component: StudentLogin },
@@ -18,6 +19,13 @@ const routes = [
   { path: '/profile', name: 'StudentProfile', component: StudentProfile },
   { path: '/adminprofile', name: 'AdminProfile', component: AdminProfile },
   { path: '/admindashboard', name: 'AdminDashboard', component: AdminDashboard },
+  { path: '/form', name: 'FormPage', component: FormPage },
+  {
+    path: '/all-items', 
+    name: 'AllItems', 
+    component: () => import('@/components/AllItems.vue')
+  },
+  
   {
     path: '/booked-item/:item',
     name: 'BookedItem',
